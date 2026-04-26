@@ -44,7 +44,7 @@ export const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
         <Link href="/" className="relative h-12 w-32 flex items-center">
           <Image 
-            src="/logo.png.png" 
+            src="/logo.png" 
             alt="Aldo Giuliani Logo" 
             fill
             className={`object-contain transition-opacity duration-300 ${pathname === '/' && !isScrolled ? 'opacity-100 brightness-0 invert' : 'opacity-100'}`}

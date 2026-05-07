@@ -7,17 +7,17 @@ import { usePathname } from 'next/navigation';
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        // If the Navbar intersects with any of the transparent triggers, it should be transparent (isScrolled = false)
         const isIntersecting = entries.some((entry) => entry.isIntersecting);
         setIsScrolled(!isIntersecting);
       },
       {
-        rootMargin: '-50px 0px 0px 0px', // Trigger slightly below the top to give a bit of leeway
+        rootMargin: '-50px 0px 0px 0px',
       }
     );
 
@@ -30,6 +30,20 @@ export const Navbar = () => {
     };
   }, []);
 
+  // Prevent scrolling when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+  }, [isMenuOpen]);
+
+  // Close menu on route change
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
+
   const links = [
     { name: 'Home', href: '/' },
     { name: 'Matrimoni', href: '/servizi/matrimoni' },
@@ -40,28 +54,65 @@ export const Navbar = () => {
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-[var(--background)]/90 backdrop-blur-md py-4 shadow-sm' : 'bg-transparent py-6'}`}>
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-        <Link href="/" className="relative h-12 w-32 flex items-center">
+    <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${isScrolled || isMenuOpen ? 'bg-[var(--background)]/90 backdrop-blur-xl py-4 shadow-sm' : 'bg-transparent py-6'}`}>
+      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between relative z-50">
+        <Link href="/" className="relative h-10 w-28 md:h-12 md:w-32 flex items-center">
           <Image 
             src="/logo.png" 
             alt="Aldo Giuliani Logo" 
             fill
-            className={`object-contain transition-opacity duration-300 ${pathname === '/' && !isScrolled ? 'opacity-100 brightness-0 invert' : 'opacity-100'}`}
+            className={`object-contain transition-all duration-500 ${pathname === '/' && !isScrolled && !isMenuOpen ? 'brightness-0 invert' : ''}`}
           />
         </Link>
+
+        {/* Desktop Links */}
         <div className="hidden md:flex gap-8">
           {links.map((link) => (
             <Link 
               key={link.name} 
               href={link.href}
-              className={`text-sm tracking-widest uppercase transition-colors hover:text-[var(--champagne)] ${pathname === link.href ? 'text-[var(--champagne)] font-medium' : (pathname === '/' && !isScrolled ? 'text-white/80' : 'text-[var(--foreground)]/80')}`}
+              className={`text-[10px] tracking-[0.2em] uppercase transition-all duration-300 hover:text-[var(--champagne)] ${pathname === link.href ? 'text-[var(--champagne)]' : (pathname === '/' && !isScrolled ? 'text-white/70' : 'text-[var(--foreground)]/70')}`}
             >
               {link.name}
             </Link>
           ))}
         </div>
+
+        {/* Mobile Menu Button */}
+        <button 
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="md:hidden flex flex-col justify-center items-end w-8 h-8 gap-1.5 focus:outline-none"
+          aria-label="Toggle Menu"
+        >
+          <span className={`h-[1px] bg-current transition-all duration-300 ease-out ${isMenuOpen ? 'w-8 rotate-45 translate-y-[3.5px]' : 'w-8'} ${pathname === '/' && !isScrolled && !isMenuOpen ? 'bg-white' : 'bg-[var(--foreground)]'}`}></span>
+          <span className={`h-[1px] bg-current transition-all duration-300 ease-out ${isMenuOpen ? 'w-8 -rotate-45 -translate-y-[3.5px]' : 'w-5'} ${pathname === '/' && !isScrolled && !isMenuOpen ? 'bg-white' : 'bg-[var(--foreground)]'}`}></span>
+        </button>
+      </div>
+
+      {/* Mobile Menu Overlay */}
+      <div 
+        className={`fixed inset-0 bg-white z-40 md:hidden transition-all duration-500 ease-in-out ${isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+      >
+        <div className="flex flex-col items-center justify-center h-full px-8 pt-24">
+          <div className="flex flex-col items-center gap-10 w-full">
+            {links.map((link, index) => (
+              <Link 
+                key={link.name} 
+                href={link.href}
+                style={{ transitionDelay: `${index * 50}ms` }}
+                className={`text-3xl font-serif tracking-[0.2em] uppercase transition-all duration-700 ${isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'} ${pathname === link.href ? 'text-[var(--champagne)]' : 'text-[#1A1A1A]'}`}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
+          
+          <div className={`mt-20 pt-10 border-t border-[var(--champagne)]/20 w-full max-w-[180px] flex flex-col items-center gap-4 transition-all duration-700 delay-300 ${isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
+            <p className="text-[10px] tracking-[0.4em] uppercase text-[#1A1A1A]/30 font-light italic">The Eternal Story</p>
+          </div>
+        </div>
       </div>
     </nav>
   );
 };
+

@@ -91,10 +91,10 @@ export const Navbar = () => {
 
       {/* Mobile Menu Overlay */}
       <div 
-        className={`fixed inset-0 bg-white z-40 md:hidden transition-all duration-500 ease-in-out ${isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        className={`fixed inset-0 bg-white z-40 md:hidden transition-all duration-500 ease-in-out overflow-y-auto overscroll-contain ${isMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       >
-        <div className="flex flex-col items-center justify-center h-full px-8 pt-24">
-          <div className="flex flex-col items-center gap-10 w-full">
+        <div className="flex flex-col items-center min-h-full justify-center px-8 pt-28 pb-12">
+          <div className="flex flex-col items-center gap-10 w-full my-auto">
             {links.map((link, index) => (
               <Link 
                 key={link.name} 
@@ -107,7 +107,7 @@ export const Navbar = () => {
             ))}
           </div>
           
-          <div className={`mt-20 pt-10 border-t border-[var(--champagne)]/20 w-full max-w-[180px] flex flex-col items-center gap-4 transition-all duration-700 delay-300 ${isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
+          <div className={`mt-12 pt-8 border-t border-[var(--champagne)]/20 w-full max-w-[180px] flex flex-col items-center gap-4 transition-all duration-700 delay-300 shrink-0 ${isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
             <p className="text-[10px] tracking-[0.4em] uppercase text-[#1A1A1A]/30 font-light italic">The Eternal Story</p>
           </div>
         </div>

@@ -28,28 +28,32 @@ export const Lightbox: React.FC<LightboxProps> = ({ src, onClose }) => {
 
   return (
     <div 
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-sm cursor-zoom-out transition-opacity"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/98 backdrop-blur-md cursor-zoom-out transition-opacity duration-300"
       onClick={onClose}
     >
       <button 
-        className="absolute top-8 right-8 text-white/70 hover:text-white text-5xl transition-colors font-light"
+        className="absolute top-6 right-6 md:top-10 md:right-10 text-white/50 hover:text-white transition-all duration-300 z-[110] flex flex-col items-center gap-1 group"
         onClick={onClose}
         aria-label="Chiudi"
       >
-        &times;
+        <span className="text-4xl md:text-5xl font-extralight leading-none group-hover:rotate-90 transition-transform duration-500">&times;</span>
+        <span className="text-[10px] tracking-[0.3em] uppercase opacity-0 group-hover:opacity-100 transition-opacity hidden md:block">Chiudi</span>
       </button>
+
       <div 
-        className="relative w-full h-full max-w-[90vw] max-h-[90vh] m-4 cursor-default" 
+        className="relative w-full h-full flex items-center justify-center p-4 md:p-12 cursor-default" 
         onClick={(e) => e.stopPropagation()}
       >
-        <Image
-          src={src}
-          alt="Immagine a tutto schermo"
-          fill
-          className="object-contain"
-          sizes="100vw"
-          priority
-        />
+        <div className="relative w-full h-full max-w-7xl max-h-[85vh] flex items-center justify-center">
+          <Image
+            src={src}
+            alt="Immagine a tutto schermo"
+            fill
+            className="object-contain"
+            sizes="100vw"
+            priority
+          />
+        </div>
       </div>
     </div>
   );

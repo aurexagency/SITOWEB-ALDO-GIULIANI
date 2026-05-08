@@ -78,7 +78,7 @@ export default function Home() {
   const pageContent = (
     <div ref={contentRef} className="w-full flex flex-col">
       {/* Hero Section */}
-      <section data-nav-transparent="true" className="relative h-screen w-full flex items-center justify-center overflow-hidden bg-[var(--background)]">
+      <section data-nav-transparent="true" className="relative h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-[var(--background)]">
         <div className="absolute inset-0 z-0 flex">
           {initialHeroImages.map((src, idx) => (
             <div 

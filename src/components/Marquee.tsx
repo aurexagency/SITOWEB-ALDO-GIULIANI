@@ -30,11 +30,21 @@ export const Marquee: React.FC<MarqueeProps> = ({ images, duration = DEFAULT_ANI
   const handleMouseDown = (e: React.MouseEvent) => {
     if (!trackRef.current) return;
     e.preventDefault();
+    startDragging(e.clientX);
+  };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!trackRef.current) return;
+    startDragging(e.touches[0].clientX);
+  };
+
+  const startDragging = (clientX: number) => {
+    if (!trackRef.current) return;
+    
     // Capture current animated position and freeze it
     const currentX = getTranslateX(trackRef.current);
     dragStartOffset.current = currentX;
-    dragStartX.current = e.clientX;
+    dragStartX.current = clientX;
     hasDragged.current = false;
 
     trackRef.current.style.animation = 'none';
@@ -45,8 +55,18 @@ export const Marquee: React.FC<MarqueeProps> = ({ images, duration = DEFAULT_ANI
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!isDragging || !trackRef.current) return;
+    moveDragging(e.clientX);
+  };
 
-    const delta = e.clientX - dragStartX.current;
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || !trackRef.current) return;
+    moveDragging(e.touches[0].clientX);
+  };
+
+  const moveDragging = (clientX: number) => {
+    if (!isDragging || !trackRef.current) return;
+
+    const delta = clientX - dragStartX.current;
     if (Math.abs(delta) > 5) hasDragged.current = true;
 
     trackRef.current.style.transform = `translateX(${dragStartOffset.current + delta}px)`;
@@ -80,6 +100,11 @@ export const Marquee: React.FC<MarqueeProps> = ({ images, duration = DEFAULT_ANI
     stopDragging(e.clientX);
   };
 
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!isDragging) return;
+    stopDragging(e.changedTouches[0].clientX);
+  };
+
   const handleMouseLeave = (e: React.MouseEvent) => {
     if (isDragging) stopDragging(e.clientX);
   };
@@ -88,10 +113,13 @@ export const Marquee: React.FC<MarqueeProps> = ({ images, duration = DEFAULT_ANI
     <>
       <div
         className="relative w-full overflow-hidden bg-[var(--background)] py-10"
-        style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+        style={{ cursor: isDragging ? 'grabbing' : 'grab', touchAction: 'pan-y' }}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
         onMouseLeave={handleMouseLeave}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         <div
           ref={trackRef}
@@ -102,7 +130,7 @@ export const Marquee: React.FC<MarqueeProps> = ({ images, duration = DEFAULT_ANI
           {duplicatedImages.map((src, index) => (
             <div
               key={index}
-              className="relative h-[400px] w-[600px] shrink-0 overflow-hidden group"
+              className="relative h-[300px] w-[450px] md:h-[400px] md:w-[600px] shrink-0 overflow-hidden group"
               style={{ cursor: isDragging ? 'grabbing' : 'pointer' }}
               onClick={() => {
                 if (!hasDragged.current) setSelectedImage(src);
@@ -112,13 +140,12 @@ export const Marquee: React.FC<MarqueeProps> = ({ images, duration = DEFAULT_ANI
                 src={src}
                 alt={`Gallery Image ${index + 1}`}
                 fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0"
+                className="object-cover transition-transform duration-700 md:group-hover:scale-105 grayscale md:group-hover:grayscale-0"
                 sizes="(max-width: 768px) 100vw, 600px"
-                unoptimized
                 draggable={false}
               />
-              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
-                <span className="text-white text-sm tracking-widest uppercase opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500">
+              <div className="absolute inset-0 bg-black/20 opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                <span className="text-white text-sm tracking-widest uppercase opacity-0 md:group-hover:opacity-100 transform translate-y-4 md:group-hover:translate-y-0 transition-all duration-500">
                   Espandi
                 </span>
               </div>
@@ -130,3 +157,4 @@ export const Marquee: React.FC<MarqueeProps> = ({ images, duration = DEFAULT_ANI
     </>
   );
 };
+

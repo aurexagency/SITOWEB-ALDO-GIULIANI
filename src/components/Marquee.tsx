@@ -130,7 +130,7 @@ export const Marquee: React.FC<MarqueeProps> = ({ images, duration = DEFAULT_ANI
           {duplicatedImages.map((src, index) => (
             <div
               key={index}
-              className="relative w-[300px] md:w-[400px] aspect-[4/5] shrink-0 overflow-hidden group"
+              className="relative w-[350px] md:w-[500px] aspect-[5/4] shrink-0 overflow-hidden group"
               style={{ cursor: isDragging ? 'grabbing' : 'pointer' }}
               onClick={() => {
                 if (!hasDragged.current) setSelectedImage(src);

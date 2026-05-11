@@ -10,6 +10,7 @@ interface Hero3DProps {
 export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
   const [activeIdx, setActiveIdx] = useState(0);
   const [radius, setRadius] = useState(800);
+  const radiusRef = useRef(800);
   const containerRef = useRef<HTMLDivElement>(null);
   
   const N = images.length;
@@ -32,6 +33,7 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
       const cardWidth = window.innerWidth < 768 ? 280 : 500;
       const r = Math.round((cardWidth / 2) / Math.tan(Math.PI / N)) + (window.innerWidth < 768 ? 40 : 100);
       setRadius(r);
+      radiusRef.current = r;
     };
     updateRadius();
     window.addEventListener('resize', updateRadius);
@@ -69,6 +71,33 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
         const carousel = containerRef.current.querySelector('.carousel-3d-inner') as HTMLElement;
         if (carousel) {
           carousel.style.transform = `rotateY(${-rotationRef.current}deg)`;
+          
+          // Continuous Live Animation (Respiro)
+          const cards = carousel.querySelectorAll('.carousel-card-wrapper') as NodeListOf<HTMLElement>;
+          cards.forEach((card, i) => {
+            // Distanza dal centro (in gradi)
+            let diff = (i * theta - rotationRef.current) % 360;
+            if (diff > 180) diff -= 360;
+            if (diff < -180) diff += 360;
+            
+            const absDiff = Math.abs(diff);
+            
+            // Influenzeremo l'animazione iniziando da 1.5 step di distanza
+            const influence = theta * 1.5; 
+            const proximity = Math.max(0, 1 - absDiff / influence);
+            
+            // Curva "Respiro" morbida (ease-in-out)
+            const smooth = (1 - Math.cos(proximity * Math.PI)) / 2;
+            
+            const scale = 0.8 + (0.2 * smooth);   // da 0.8 a 1.0
+            const blur = 8 * (1 - smooth);        // da 8px a 0px
+            const opacity = 0.4 + (0.6 * smooth); // da 0.4 a 1.0
+            
+            // Applica stili in tempo reale
+            card.style.transform = `rotateY(${i * theta}deg) translateZ(${radiusRef.current}px) scale(${scale})`;
+            card.style.filter = `blur(${blur}px)`;
+            card.style.opacity = opacity.toString();
+          });
         }
       }
 
@@ -76,7 +105,7 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
     };
     loop();
     return () => cancelAnimationFrame(rafId);
-  }, []);
+  }, [theta]);
 
   // Handle scroll to snap
   useEffect(() => {
@@ -187,27 +216,28 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
           className="carousel-3d-inner relative flex items-center justify-center w-full h-full pointer-events-none"
           style={{ transformStyle: 'preserve-3d' }}
         >
-          {images.map((src, idx) => {
-            const isActive = idx === activeIdx;
+          {images.map((src, i) => {
+            // Remove discrete React inline styles, JS will handle it instantly
             return (
               <div
                 key={src}
-                className="absolute pointer-events-none"
+                className="carousel-card-wrapper absolute pointer-events-none"
                 style={{
-                  transform: `rotateY(${idx * theta}deg) translateZ(${radius}px) scale(${isActive ? 1 : 0.8})`,
-                  transition: 'opacity 0.5s ease-out, filter 0.5s ease-out, transform 0.5s ease-out',
-                  opacity: isActive ? 1 : 0.4,
-                  filter: isActive ? 'blur(0px)' : 'blur(8px)',
+                  // Fallback before JS kicks in
+                  transform: `rotateY(${i * theta}deg) translateZ(${radius}px) scale(${i === 0 ? 1 : 0.8})`,
+                  opacity: i === 0 ? 1 : 0.4,
+                  filter: i === 0 ? 'blur(0px)' : 'blur(8px)',
+                  willChange: 'transform, opacity, filter'
                 }}
               >
                 <div className="relative w-[280px] md:w-[500px] aspect-[5/4] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] rounded-sm overflow-hidden border border-white/10">
                   <Image
                     src={src}
-                    alt={`Hero Image ${idx + 1}`}
+                    alt={`Hero Image ${i + 1}`}
                     fill
                     sizes="(max-width: 768px) 280px, 500px"
                     className="object-cover object-center"
-                    priority={idx < 3 || idx > N - 3}
+                    priority={i < 3 || i > N - 3}
                   />
                   <div className="absolute inset-0 bg-black/10 pointer-events-none" />
                 </div>

@@ -194,8 +194,8 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
                 key={src}
                 className="absolute pointer-events-none"
                 style={{
-                  transform: `rotateY(${idx * theta}deg) translateZ(${radius}px)`,
-                  transition: 'opacity 0.5s ease-out, filter 0.5s ease-out',
+                  transform: `rotateY(${idx * theta}deg) translateZ(${radius}px) scale(${isActive ? 1 : 0.8})`,
+                  transition: 'opacity 0.5s ease-out, filter 0.5s ease-out, transform 0.5s ease-out',
                   opacity: isActive ? 1 : 0.4,
                   filter: isActive ? 'blur(0px)' : 'blur(8px)',
                 }}

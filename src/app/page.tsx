@@ -77,8 +77,8 @@ export default function Home() {
   const pageContent = (
     <div ref={contentRef} className="w-full flex flex-col">
       {/* Hero Section */}
-      <section data-nav-transparent="true" className="relative h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-[var(--background)]">
-        <div className="absolute inset-0 z-0 flex">
+      <section data-nav-transparent="true" className="relative h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-[var(--background)] px-6">
+        <div className="relative w-full max-w-[90vw] aspect-[4/5] md:h-[85dvh] md:w-auto z-0 overflow-hidden shadow-2xl">
           {initialHeroImages.map((src, idx) => (
             <div 
               key={src} 
@@ -88,13 +88,13 @@ export default function Home() {
                 src={src}
                 alt="Hero Background"
                 fill
-                sizes="100vw"
+                sizes="(max-width: 768px) 100vw, 70vw"
                 className="object-cover object-center"
                 priority={idx === 0}
               />
             </div>
           ))}
-          <div className="absolute inset-0 bg-black/20 pointer-events-none" />
+          <div className="absolute inset-0 bg-black/10 pointer-events-none" />
         </div>
       </section>
 

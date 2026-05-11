@@ -10,242 +10,227 @@ interface Hero3DProps {
 export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
   const [activeIdx, setActiveIdx] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  
+  const sceneRef = useRef<HTMLDivElement>(null);
+
   const N = images.length;
   const theta = 360 / N;
 
-  // Animation and state refs
+  // Animation refs
   const rotationRef = useRef(0);
   const targetRotationRef = useRef(0);
   const scrollAccumulator = useRef(0);
   const lastScrollY = useRef(0);
-  const radiusRef = useRef(800);
-  
-  // Drag states
+  const radiusRef = useRef(900);
+  const cardWRef = useRef(500);
+  const cardHRef = useRef(400); // 500 * 4/5
+
+  // Drag state
   const isDragging = useRef(false);
   const lastX = useRef(0);
   const velocity = useRef(0);
 
-  // Responsive radius
+  // Responsive sizing
   useEffect(() => {
-    const updateRadius = () => {
-      const cardWidth = window.innerWidth < 768 ? 280 : 500;
-      const r = Math.round((cardWidth / 2) / Math.tan(Math.PI / N)) + (window.innerWidth < 768 ? 40 : 100);
+    const update = () => {
+      const isMobile = window.innerWidth < 768;
+      const cw = isMobile ? 280 : 500;
+      const ch = Math.round(cw * 4 / 5);
+      const r = Math.round((cw / 2) / Math.tan(Math.PI / N)) + (isMobile ? 50 : 120);
+      cardWRef.current = cw;
+      cardHRef.current = ch;
       radiusRef.current = r;
+      if (sceneRef.current) {
+        sceneRef.current.style.width = `${cw}px`;
+        sceneRef.current.style.height = `${ch}px`;
+      }
     };
-    updateRadius();
-    window.addEventListener('resize', updateRadius);
-    return () => window.removeEventListener('resize', updateRadius);
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
   }, [N]);
 
-  // Helper to update target and active index
+  // Helper: set target rotation and derive active index
   const updateTarget = (newTarget: number) => {
     targetRotationRef.current = newTarget;
-    const normalized = ((newTarget % 360) + 360) % 360;
-    let closestIdx = 0;
-    let minDiff = 360;
+    const norm = ((newTarget % 360) + 360) % 360;
+    let best = 0, minD = 360;
     for (let i = 0; i < N; i++) {
-      const angle = (i * theta - normalized + 360) % 360;
-      const diff = Math.min(angle, 360 - angle);
-      if (diff < minDiff) {
-        minDiff = diff;
-        closestIdx = i;
-      }
+      const a = (i * theta - norm + 360) % 360;
+      const d = Math.min(a, 360 - a);
+      if (d < minD) { minD = d; best = i; }
     }
-    setActiveIdx(closestIdx);
+    setActiveIdx(best);
   };
 
-  // Animation Loop (Continuous Wave Effect)
+  // rAF animation loop — drives rotation AND per-card wave scaling
   useEffect(() => {
-    let rafId: number;
+    let raf: number;
+
     const loop = () => {
+      // Interpolate toward target when not dragging
       if (!isDragging.current) {
-        // Smoothly interpolate current rotation to target rotation
-        const diff = targetRotationRef.current - rotationRef.current;
-        rotationRef.current += diff * 0.1;
-      }
-      
-      if (containerRef.current) {
-        const carousel = containerRef.current.querySelector('.carousel-3d-inner') as HTMLElement;
-        if (carousel) {
-          carousel.style.transform = `rotateY(${-rotationRef.current}deg)`;
-          
-          // Continuous Active Center Scaling
-          const cards = containerRef.current.querySelectorAll('.carousel-card');
-          cards.forEach((cardNode, i) => {
-            const card = cardNode as HTMLElement;
-            const angle = (i * theta - rotationRef.current);
-            let normAngle = ((angle % 360) + 360) % 360;
-            if (normAngle > 180) normAngle -= 360;
-            
-            const absAngle = Math.abs(normAngle);
-            const influence = theta * 2.5; // Wider range = smoother wave
-            const proximity = Math.max(0, 1 - absAngle / influence);
-            
-            // Sine ease-out for a natural wave feel
-            const smoothProximity = Math.sin(proximity * Math.PI / 2);
-            
-            // Interpolate: scale 0.75 (far) → 1.4 (center, exact spec)
-            const scale = 0.75 + smoothProximity * 0.65; // 0.75 to 1.4
-            const blur = 14 * (1 - smoothProximity);     // 14px → 0px
-            const opacity = 0.25 + smoothProximity * 0.75; // 0.25 → 1.0
-            const zIndex = Math.round(smoothProximity * 10); // 0 → 10
-            
-            card.style.transform = `rotateY(${i * theta}deg) translateZ(${radiusRef.current}px) scale(${scale})`;
-            card.style.filter = `blur(${blur}px)`;
-            card.style.opacity = opacity.toString();
-            card.style.zIndex = zIndex.toString();
-          });
-        }
+        rotationRef.current += (targetRotationRef.current - rotationRef.current) * 0.1;
       }
 
-      rafId = requestAnimationFrame(loop);
+      if (sceneRef.current) {
+        // Rotate the whole drum
+        sceneRef.current.style.transform = `rotateY(${-rotationRef.current}deg)`;
+
+        // Wave effect on every card
+        const cards = sceneRef.current.querySelectorAll('.carousel-card') as NodeListOf<HTMLElement>;
+        cards.forEach((card, i) => {
+          // Angular offset from center (0 = facing viewer)
+          let ang = (i * theta - rotationRef.current) % 360;
+          if (ang > 180) ang -= 360;
+          if (ang < -180) ang += 360;
+
+          const absAng = Math.abs(ang);
+          const influence = theta * 2.5;
+          const proximity = Math.max(0, 1 - absAng / influence);
+          const smooth = Math.sin(proximity * Math.PI / 2); // ease-out sine
+
+          const scale   = 0.75 + smooth * 0.65;   // 0.75 → 1.40
+          const blur    = 14   * (1 - smooth);     // 14px → 0px
+          const opacity = 0.25 + smooth * 0.75;    // 0.25 → 1.00
+          const zIdx    = Math.round(smooth * 10); // 0 → 10
+
+          card.style.transform = `rotateY(${i * theta}deg) translateZ(${radiusRef.current}px) scale(${scale})`;
+          card.style.filter    = `blur(${blur}px)`;
+          card.style.opacity   = String(opacity);
+          card.style.zIndex    = String(zIdx);
+        });
+      }
+
+      raf = requestAnimationFrame(loop);
     };
     loop();
-    return () => cancelAnimationFrame(rafId);
+    return () => cancelAnimationFrame(raf);
   }, [theta]);
 
-  // Handle scroll to snap
+  // Scroll → snap
   useEffect(() => {
     lastScrollY.current = window.scrollY;
-    
-    const handleScroll = () => {
-      if (isDragging.current) {
-        lastScrollY.current = window.scrollY;
-        return;
-      }
-      
-      const currentScrollY = window.scrollY;
-      const deltaY = currentScrollY - lastScrollY.current;
-      lastScrollY.current = currentScrollY;
-      
-      scrollAccumulator.current += deltaY;
-      
-      // Every 120px of scroll triggers a photo change
+    const onScroll = () => {
+      if (isDragging.current) { lastScrollY.current = window.scrollY; return; }
+      const dy = window.scrollY - lastScrollY.current;
+      lastScrollY.current = window.scrollY;
+      scrollAccumulator.current += dy;
       if (Math.abs(scrollAccumulator.current) > 120) {
-        const direction = Math.sign(scrollAccumulator.current);
-        updateTarget(targetRotationRef.current + direction * theta);
+        updateTarget(targetRotationRef.current + Math.sign(scrollAccumulator.current) * theta);
         scrollAccumulator.current = 0;
       }
     };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, [theta]);
 
-  // Pointer Events for Dragging
-  const handlePointerDown = (e: React.PointerEvent) => {
+  // Pointer drag
+  const onPointerDown = (e: React.PointerEvent) => {
     isDragging.current = true;
     lastX.current = e.clientX;
     velocity.current = 0;
   };
-
-  const handlePointerMove = (e: React.PointerEvent) => {
+  const onPointerMove = (e: React.PointerEvent) => {
     if (!isDragging.current) return;
-    const deltaX = e.clientX - lastX.current;
+    const dx = e.clientX - lastX.current;
     lastX.current = e.clientX;
-    velocity.current = deltaX;
-    
-    // Convert drag pixels to rotation degrees
-    const dragSensitivity = 0.4;
-    rotationRef.current -= deltaX * dragSensitivity;
-    
-    // Keep active index updated while dragging
-    const normalized = ((rotationRef.current % 360) + 360) % 360;
-    let closestIdx = 0;
-    let minDiff = 360;
-    for (let i = 0; i < N; i++) {
-      const angle = (i * theta - normalized + 360) % 360;
-      const diff = Math.min(angle, 360 - angle);
-      if (diff < minDiff) {
-        minDiff = diff;
-        closestIdx = i;
-      }
-    }
-    setActiveIdx(closestIdx);
-  };
+    velocity.current = dx;
+    rotationRef.current -= dx * 0.4;
 
-  const handlePointerUp = () => {
+    // Update active index live during drag
+    const norm = ((rotationRef.current % 360) + 360) % 360;
+    let best = 0, minD = 360;
+    for (let i = 0; i < N; i++) {
+      const a = (i * theta - norm + 360) % 360;
+      const d = Math.min(a, 360 - a);
+      if (d < minD) { minD = d; best = i; }
+    }
+    setActiveIdx(best);
+  };
+  const onPointerUp = () => {
     if (!isDragging.current) return;
     isDragging.current = false;
-    
-    // Snap to nearest index incorporating flick velocity
-    const projectedRotation = rotationRef.current - velocity.current * 2;
-    const nearestIndex = Math.round(projectedRotation / theta);
-    updateTarget(nearestIndex * theta);
+    const projected = rotationRef.current - velocity.current * 2;
+    updateTarget(Math.round(projected / theta) * theta);
   };
 
   return (
-    <section 
-      ref={containerRef} 
-      data-nav-transparent="true" 
-      className="relative h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-[var(--background)] cursor-grab active:cursor-grabbing"
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerUp}
-      onPointerLeave={handlePointerUp}
+    <section
+      ref={containerRef}
+      data-nav-transparent="true"
+      className="relative h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-[var(--background)] cursor-grab active:cursor-grabbing select-none"
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
+      onPointerUp={onPointerUp}
+      onPointerLeave={onPointerUp}
     >
-      
-      {/* Background Fill: Blurred Active Image */}
+      {/* Atmospheric blurred background */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         {images.map((src, idx) => (
-          <div 
-            key={`bg-${src}`} 
-            className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${idx === activeIdx ? 'opacity-40' : 'opacity-0'}`}
+          <div
+            key={`bg-${src}`}
+            className={`absolute inset-0 transition-opacity duration-700 ${idx === activeIdx ? 'opacity-40' : 'opacity-0'}`}
           >
-            <Image
-              src={src}
-              alt=""
-              fill
-              className="object-cover blur-[50px] scale-110"
-              priority={idx === 0}
-            />
+            <Image src={src} alt="" fill className="object-cover blur-[50px] scale-110" priority={idx === 0} />
           </div>
         ))}
         <div className="absolute inset-0 bg-white/10" />
       </div>
 
-      {/* 3D Carousel Scene */}
-      <div 
-        className="relative z-10 flex items-center justify-center w-full h-full pointer-events-none"
-        style={{ perspective: '1200px', transformStyle: 'preserve-3d' }}
+      {/* 3D Carousel */}
+      <div
+        className="relative z-10 pointer-events-none"
+        style={{ perspective: '1200px' }}
       >
-        <div 
-          className="carousel-3d-inner relative flex items-center justify-center w-full h-full pointer-events-none"
-          style={{ transformStyle: 'preserve-3d' }}
+        {/*
+          KEY STRUCTURAL FIX:
+          This scene div has the exact dimensions of ONE card.
+          All carousel-card children use `absolute inset-0` to fill it,
+          so every card starts from the same center point.
+          rotateY + translateZ then distributes them correctly on a cylinder.
+        */}
+        <div
+          ref={sceneRef}
+          className="carousel-3d-inner relative pointer-events-none"
+          style={{
+            width: `${cardWRef.current}px`,
+            height: `${cardHRef.current}px`,
+            transformStyle: 'preserve-3d',
+          }}
         >
           {images.map((src, idx) => (
             <div
               key={src}
-              className="carousel-card absolute pointer-events-none"
+              className="carousel-card absolute inset-0 pointer-events-none"
               style={{
-                // Initial styles, they will be immediately overridden by the JS animation loop
-                transform: `rotateY(${idx * theta}deg) translateZ(${radiusRef.current}px) scale(0.8)`,
-                opacity: 0.3,
-                filter: 'blur(10px)',
+                transformStyle: 'preserve-3d',
+                // Initial values — overwritten every frame by the rAF loop
+                transform: `rotateY(${idx * theta}deg) translateZ(${radiusRef.current}px) scale(0.75)`,
+                opacity: 0.25,
+                filter: 'blur(14px)',
               }}
             >
-              <div className="relative w-[280px] md:w-[500px] aspect-[5/4] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] rounded-sm overflow-hidden border border-white/10">
+              {/* Card fills scene div entirely */}
+              <div className="relative w-full h-full shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] rounded-sm overflow-hidden border border-white/10">
                 <Image
                   src={src}
-                  alt={`Hero Image ${idx + 1}`}
+                  alt={`Hero ${idx + 1}`}
                   fill
                   sizes="(max-width: 768px) 280px, 500px"
                   className="object-cover object-center"
                   priority={idx < 3 || idx > N - 3}
                 />
-                <div className="absolute inset-0 bg-black/10 pointer-events-none" />
+                <div className="absolute inset-0 bg-black/10" />
               </div>
             </div>
           ))}
         </div>
       </div>
-      
-      {/* Scroll indicator overlay */}
+
+      {/* Scroll hint */}
       <div className="absolute bottom-12 md:bottom-20 z-20 text-center w-full pointer-events-none">
-        <p className="text-white/60 tracking-[0.3em] text-xs uppercase mb-2">Scorri o Trascina</p>
+        <p className="text-white/60 tracking-[0.3em] text-xs uppercase">Scorri o Trascina</p>
       </div>
     </section>
   );
 };
-

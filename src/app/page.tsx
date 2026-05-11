@@ -1,75 +1,36 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
+import React from 'react';
 import { Button } from '@/components/Button';
 import { Marquee } from '@/components/Marquee';
 import { MyStyle } from '@/components/MyStyle';
 import { Hero3D } from '@/components/Hero3D';
 
-const initialHeroImages = [
-  '/Home/hero/01.jpg',
-  '/Home/hero/02.jpg',
-  '/Home/hero/03.jpg',
-  '/Home/hero/04.jpg',
-  '/Home/hero/05.jpg',
-  '/Home/hero/06.jpg',
-  '/Home/hero/07.jpg',
-  '/Home/hero/08.jpg',
-  '/Home/hero/09.jpg',
-  '/Home/hero/10.jpg',
-  '/Home/hero/11.jpg',
-  '/Home/hero/12.jpg',
-  '/Home/hero/13.jpg',
-  '/Home/hero/14.jpg',
-  '/Home/hero/15.jpg',
-  '/Home/hero/16.jpg',
-  '/Home/hero/17.jpg'
+const heroSlides = [
+  { src: '/Home/hero/01.jpg', title: 'Reportage', subtitle: 'Storie autentiche' },
+  { src: '/Home/hero/02.jpg', title: 'Sport', subtitle: 'Energia pura' },
+  { src: '/Home/hero/03.jpg', title: 'Matrimoni', subtitle: 'Emozioni senza tempo' },
+  { src: '/Home/hero/04.jpg', title: 'Wildlife', subtitle: 'Natura selvaggia' },
+  { src: '/Home/hero/05.jpg', title: 'Portrait', subtitle: "L'essenza di ogni volto" },
+  { src: '/Home/hero/06.jpg', title: 'Sport', subtitle: 'Il gesto perfetto' },
+  { src: '/Home/hero/07.jpg', title: 'Reportage', subtitle: 'Momenti irripetibili' },
+  { src: '/Home/hero/08.jpg', title: 'Matrimoni', subtitle: 'Il giorno più bello' },
+  { src: '/Home/hero/09.jpg', title: 'Wildlife', subtitle: 'Istinti primordiali' },
+  { src: '/Home/hero/10.jpg', title: 'Portrait', subtitle: 'Sguardi che parlano' },
+  { src: '/Home/hero/11.jpg', title: 'Sport', subtitle: 'Oltre il limite' },
+  { src: '/Home/hero/12.jpg', title: 'Reportage', subtitle: 'Dietro le quinte' },
+  { src: '/Home/hero/13.jpg', title: 'Matrimoni', subtitle: 'Promesse eterne' },
+  { src: '/Home/hero/14.jpg', title: 'Wildlife', subtitle: 'Creature maestose' },
+  { src: '/Home/hero/15.jpg', title: 'Portrait', subtitle: 'Luce naturale' },
+  { src: '/Home/hero/16.jpg', title: 'Sport', subtitle: 'Adrenalina' },
+  { src: '/Home/hero/17.jpg', title: 'Reportage', subtitle: 'Verità in ogni scatto' },
 ];
 
 export default function Home() {
-  const contentRef = useRef<HTMLDivElement>(null);
-
-  // Infinite Scroll Logic
-  useEffect(() => {
-    const content = contentRef.current;
-    if (!content) return;
-
-    let isScrolling = false;
-
-    const handleScroll = () => {
-      if (isScrolling) return;
-
-      const contentHeight = content.offsetHeight;
-      const scrollTop = window.scrollY;
-
-      if (scrollTop >= contentHeight) {
-        isScrolling = true;
-        window.scrollTo({ top: scrollTop - contentHeight, behavior: 'instant' });
-        setTimeout(() => { isScrolling = false; }, 20);
-      } else if (scrollTop <= 0) {
-        isScrolling = true;
-        window.scrollTo({ top: scrollTop + contentHeight, behavior: 'instant' });
-        setTimeout(() => { isScrolling = false; }, 20);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    
-    // Initial offset so user can scroll up immediately
-    if (window.scrollY === 0) {
-      window.scrollTo({ top: 10, behavior: 'instant' });
-    }
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
-
-  const pageContent = (
-    <div ref={contentRef} className="w-full flex flex-col">
-      {/* Hero Section */}
-      <Hero3D images={initialHeroImages} />
+  return (
+    <main className="w-full relative">
+      {/* Hero Section — Sage East style 3D Depth Carousel */}
+      <Hero3D images={[]} slides={heroSlides} />
 
       {/* Marquee Section */}
       <section className="py-16 bg-[var(--background)]">
@@ -131,13 +92,6 @@ export default function Home() {
           Preventivo Matrimoni
         </Button>
       </section>
-    </div>
-  );
-
-  return (
-    <main className="w-full relative">
-      {pageContent}
-      {pageContent}
     </main>
   );
 }

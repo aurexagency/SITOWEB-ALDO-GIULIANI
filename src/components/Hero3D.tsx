@@ -79,21 +79,23 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
         // Wave effect on every card
         const cards = sceneRef.current.querySelectorAll('.carousel-card') as NodeListOf<HTMLElement>;
         cards.forEach((card, i) => {
-          // Angular offset from center (0 = facing viewer)
-          let ang = (i * theta - rotationRef.current) % 360;
-          if (ang > 180) ang -= 360;
-          if (ang < -180) ang += 360;
+          // Absolute angular position in radians
+          const angRad = (i * theta - rotationRef.current) * Math.PI / 180;
+          
+          // Cosine gives 1 at center (facing viewer) and -1 at the back
+          const cos = Math.cos(angRad);
+          
+          // Proximity: we only care about the front half (cos > 0)
+          // Using a power function (e.g., ^4) makes the "peak" sharper at the center
+          const proximity = Math.max(0, cos);
+          const smooth = Math.pow(proximity, 4);
 
-          const absAng = Math.abs(ang);
-          const influence = theta * 2.5;
-          const proximity = Math.max(0, 1 - absAng / influence);
-          const smooth = Math.sin(proximity * Math.PI / 2); // ease-out sine
-
-          const scale   = 0.75 + smooth * 0.65;   // 0.75 → 1.40
-          const blur    = 14   * (1 - smooth);     // 14px → 0px
-          const opacity = 0.25 + smooth * 0.75;    // 0.25 → 1.00
-          const zIdx    = Math.round(smooth * 10); // 0 → 10
-
+          // Map values based on smooth proximity
+          const scale   = 0.8 + smooth * 0.6;      // 0.8 → 1.4
+          const blur    = 8 * (1 - smooth);        // 8px → 0px (less aggressive)
+          const opacity = 0.4 + smooth * 0.6;      // 0.4 → 1.0 (more visible)
+          const zIdx    = Math.round(smooth * 50); // Higher range for better stacking
+          
           card.style.transform = `rotateY(${i * theta}deg) translateZ(${radiusRef.current}px) scale(${scale})`;
           card.style.filter    = `blur(${blur}px)`;
           card.style.opacity   = String(opacity);

@@ -79,17 +79,17 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
             if (normAngle > 180) normAngle -= 360;
             
             const absAngle = Math.abs(normAngle);
-            const influence = theta * 1.8; // Range of influence around the center
+            const influence = theta * 2.5; // Wider range = smoother wave
             const proximity = Math.max(0, 1 - absAngle / influence);
             
-            // Ease-out mapping for a smooth wave
+            // Sine ease-out for a natural wave feel
             const smoothProximity = Math.sin(proximity * Math.PI / 2);
             
-            // Interpolate dynamic values
-            const scale = 0.8 + smoothProximity * 0.35; // 0.8 to 1.15
-            const blur = 10 * (1 - smoothProximity); // 10px to 0px
-            const opacity = 0.3 + smoothProximity * 0.7; // 0.3 to 1
-            const zIndex = Math.round(smoothProximity * 10);
+            // Interpolate: scale 0.75 (far) → 1.4 (center, exact spec)
+            const scale = 0.75 + smoothProximity * 0.65; // 0.75 to 1.4
+            const blur = 14 * (1 - smoothProximity);     // 14px → 0px
+            const opacity = 0.25 + smoothProximity * 0.75; // 0.25 → 1.0
+            const zIndex = Math.round(smoothProximity * 10); // 0 → 10
             
             card.style.transform = `rotateY(${i * theta}deg) translateZ(${radiusRef.current}px) scale(${scale})`;
             card.style.filter = `blur(${blur}px)`;

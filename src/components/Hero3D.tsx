@@ -9,7 +9,6 @@ interface Hero3DProps {
 
 export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
   const [activeIdx, setActiveIdx] = useState(0);
-  const [radius, setRadius] = useState(800);
   const containerRef = useRef<HTMLDivElement>(null);
   
   const N = images.length;
@@ -20,6 +19,7 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
   const targetRotationRef = useRef(0);
   const scrollAccumulator = useRef(0);
   const lastScrollY = useRef(0);
+  const radiusRef = useRef(800);
   
   // Drag states
   const isDragging = useRef(false);
@@ -31,7 +31,7 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
     const updateRadius = () => {
       const cardWidth = window.innerWidth < 768 ? 280 : 500;
       const r = Math.round((cardWidth / 2) / Math.tan(Math.PI / N)) + (window.innerWidth < 768 ? 40 : 100);
-      setRadius(r);
+      radiusRef.current = r;
     };
     updateRadius();
     window.addEventListener('resize', updateRadius);
@@ -55,7 +55,7 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
     setActiveIdx(closestIdx);
   };
 
-  // Animation Loop
+  // Animation Loop (Continuous Wave Effect)
   useEffect(() => {
     let rafId: number;
     const loop = () => {
@@ -69,6 +69,33 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
         const carousel = containerRef.current.querySelector('.carousel-3d-inner') as HTMLElement;
         if (carousel) {
           carousel.style.transform = `rotateY(${-rotationRef.current}deg)`;
+          
+          // Continuous Active Center Scaling
+          const cards = containerRef.current.querySelectorAll('.carousel-card');
+          cards.forEach((cardNode, i) => {
+            const card = cardNode as HTMLElement;
+            const angle = (i * theta - rotationRef.current);
+            let normAngle = ((angle % 360) + 360) % 360;
+            if (normAngle > 180) normAngle -= 360;
+            
+            const absAngle = Math.abs(normAngle);
+            const influence = theta * 1.8; // Range of influence around the center
+            const proximity = Math.max(0, 1 - absAngle / influence);
+            
+            // Ease-out mapping for a smooth wave
+            const smoothProximity = Math.sin(proximity * Math.PI / 2);
+            
+            // Interpolate dynamic values
+            const scale = 0.8 + smoothProximity * 0.35; // 0.8 to 1.15
+            const blur = 10 * (1 - smoothProximity); // 10px to 0px
+            const opacity = 0.3 + smoothProximity * 0.7; // 0.3 to 1
+            const zIndex = Math.round(smoothProximity * 10);
+            
+            card.style.transform = `rotateY(${i * theta}deg) translateZ(${radiusRef.current}px) scale(${scale})`;
+            card.style.filter = `blur(${blur}px)`;
+            card.style.opacity = opacity.toString();
+            card.style.zIndex = zIndex.toString();
+          });
         }
       }
 
@@ -76,7 +103,7 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
     };
     loop();
     return () => cancelAnimationFrame(rafId);
-  }, []);
+  }, [theta]);
 
   // Handle scroll to snap
   useEffect(() => {
@@ -187,33 +214,30 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
           className="carousel-3d-inner relative flex items-center justify-center w-full h-full pointer-events-none"
           style={{ transformStyle: 'preserve-3d' }}
         >
-          {images.map((src, idx) => {
-            const isActive = idx === activeIdx;
-            return (
-              <div
-                key={src}
-                className="absolute pointer-events-none"
-                style={{
-                  transform: `rotateY(${idx * theta}deg) translateZ(${radius}px) scale(${isActive ? 1 : 0.8})`,
-                  transition: 'opacity 0.5s ease-out, filter 0.5s ease-out, transform 0.5s ease-out',
-                  opacity: isActive ? 1 : 0.4,
-                  filter: isActive ? 'blur(0px)' : 'blur(8px)',
-                }}
-              >
-                <div className="relative w-[280px] md:w-[500px] aspect-[5/4] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] rounded-sm overflow-hidden border border-white/10">
-                  <Image
-                    src={src}
-                    alt={`Hero Image ${idx + 1}`}
-                    fill
-                    sizes="(max-width: 768px) 280px, 500px"
-                    className="object-cover object-center"
-                    priority={idx < 3 || idx > N - 3}
-                  />
-                  <div className="absolute inset-0 bg-black/10 pointer-events-none" />
-                </div>
+          {images.map((src, idx) => (
+            <div
+              key={src}
+              className="carousel-card absolute pointer-events-none"
+              style={{
+                // Initial styles, they will be immediately overridden by the JS animation loop
+                transform: `rotateY(${idx * theta}deg) translateZ(${radiusRef.current}px) scale(0.8)`,
+                opacity: 0.3,
+                filter: 'blur(10px)',
+              }}
+            >
+              <div className="relative w-[280px] md:w-[500px] aspect-[5/4] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] rounded-sm overflow-hidden border border-white/10">
+                <Image
+                  src={src}
+                  alt={`Hero Image ${idx + 1}`}
+                  fill
+                  sizes="(max-width: 768px) 280px, 500px"
+                  className="object-cover object-center"
+                  priority={idx < 3 || idx > N - 3}
+                />
+                <div className="absolute inset-0 bg-black/10 pointer-events-none" />
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       </div>
       
@@ -224,3 +248,4 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
     </section>
   );
 };
+

@@ -81,20 +81,22 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
         cards.forEach((card, i) => {
           // Absolute angular position in radians
           const angRad = (i * theta - rotationRef.current) * Math.PI / 180;
-          
-          // Cosine gives 1 at center (facing viewer) and -1 at the back
           const cos = Math.cos(angRad);
           
-          // Proximity: we only care about the front half (cos > 0)
-          // Using a power function (e.g., ^4) makes the "peak" sharper at the center
+          // Proximity: 1 at front, -1 at back. 
+          // We map the front half (0 to 1) to a smooth scale.
           const proximity = Math.max(0, cos);
-          const smooth = Math.pow(proximity, 4);
+          const smooth = Math.pow(proximity, 2); // Squared for a nicer curve than linear
 
-          // Map values based on smooth proximity
-          const scale   = 0.8 + smooth * 0.6;      // 0.8 → 1.4
-          const blur    = 8 * (1 - smooth);        // 8px → 0px (less aggressive)
-          const opacity = 0.4 + smooth * 0.6;      // 0.4 → 1.0 (more visible)
-          const zIdx    = Math.round(smooth * 50); // Higher range for better stacking
+          // Specification-aligned values
+          // Scale: 0.8 (side) -> 1.4 (center)
+          const scale   = 0.8 + smooth * 0.6;
+          // Blur: 6px (side) -> 0px (center)
+          const blur    = 6 * (1 - smooth); 
+          // Opacity: 0.5 (side) -> 1.0 (center)
+          const opacity = 0.5 + smooth * 0.5;
+          // Z-Index: 0 (side) -> 20 (center)
+          const zIdx    = Math.round(smooth * 20);
           
           card.style.transform = `rotateY(${i * theta}deg) translateZ(${radiusRef.current}px) scale(${scale})`;
           card.style.filter    = `blur(${blur}px)`;

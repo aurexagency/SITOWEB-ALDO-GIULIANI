@@ -52,7 +52,7 @@ export const MyStyle: React.FC = () => {
                 src="/Home/Leone.jpg"
                 alt="Reportage style photography"
                 fill
-                className="object-cover md:grayscale transition-all duration-1000 md:group-hover:scale-105 md:group-hover:grayscale-0"
+                className="object-cover transition-all duration-1000 md:group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
               <div className="absolute inset-0 bg-black/10 opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">

@@ -140,7 +140,7 @@ export const Marquee: React.FC<MarqueeProps> = ({ images, duration = DEFAULT_ANI
                 src={src}
                 alt={`Gallery Image ${index + 1}`}
                 fill
-                className="object-cover transition-transform duration-700 md:group-hover:scale-105 grayscale md:group-hover:grayscale-0"
+                className="object-cover transition-transform duration-700 md:group-hover:scale-105"
                 sizes="(max-width: 768px) 100vw, 600px"
                 draggable={false}
               />

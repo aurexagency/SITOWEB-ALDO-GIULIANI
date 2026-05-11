@@ -222,13 +222,7 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
               <div
                 key={src}
                 className="carousel-card-wrapper absolute pointer-events-none"
-                style={{
-                  // Fallback before JS kicks in
-                  transform: `rotateY(${i * theta}deg) translateZ(${radius}px) scale(${i === 0 ? 1 : 0.8})`,
-                  opacity: i === 0 ? 1 : 0.4,
-                  filter: i === 0 ? 'blur(0px)' : 'blur(8px)',
-                  willChange: 'transform, opacity, filter'
-                }}
+                style={{ willChange: 'transform, opacity, filter' }}
               >
                 <div className="relative w-[280px] md:w-[500px] aspect-[5/4] shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] rounded-sm overflow-hidden border border-white/10">
                   <Image

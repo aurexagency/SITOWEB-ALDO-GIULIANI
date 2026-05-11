@@ -8,23 +8,22 @@ import { MyStyle } from '@/components/MyStyle';
 
 const initialHeroImages = [
   '/Home/hero/01.jpg',
-  '/Home/hero/03Web%204.jpg',
-  '/Home/hero/05Web.jpg',
-  '/Home/hero/BeachVolley03.jpg',
-  '/Home/hero/Boxe02.jpg',
-  '/Home/hero/Calcio01.jpg',
-  '/Home/hero/DSC00705-2.jpg',
-  '/Home/hero/DSC00931-2.jpg',
-  '/Home/hero/DSC01314-2.jpg',
-  '/Home/hero/DSC_0359.jpg',
-  '/Home/hero/DSC_9290.jpg',
-  '/Home/hero/IMG_4935.jpg',
-  '/Home/hero/IMG_4941.jpg',
-  '/Home/hero/IMG_4961.jpg',
-  '/Home/hero/IMG_4964.jpg',
-  '/Home/hero/Vela02.jpg',
-  '/Home/hero/_DSC4443.jpg',
-  '/Home/hero/_DSC4688.jpg'
+  '/Home/hero/02.jpg',
+  '/Home/hero/03.jpg',
+  '/Home/hero/04.jpg',
+  '/Home/hero/05.jpg',
+  '/Home/hero/06.jpg',
+  '/Home/hero/07.jpg',
+  '/Home/hero/08.jpg',
+  '/Home/hero/09.jpg',
+  '/Home/hero/10.jpg',
+  '/Home/hero/11.jpg',
+  '/Home/hero/12.jpg',
+  '/Home/hero/13.jpg',
+  '/Home/hero/14.jpg',
+  '/Home/hero/15.jpg',
+  '/Home/hero/16.jpg',
+  '/Home/hero/17.jpg'
 ];
 
 export default function Home() {
@@ -82,7 +81,7 @@ export default function Home() {
         <div className="absolute inset-0 z-0 flex">
           {initialHeroImages.map((src, idx) => (
             <div 
-              key={idx} 
+              key={src} 
               className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${idx === currentImageIdx ? 'opacity-100' : 'opacity-0'}`}
             >
               <Image
@@ -90,7 +89,7 @@ export default function Home() {
                 alt="Hero Background"
                 fill
                 sizes="100vw"
-                className="object-cover object-top"
+                className="object-cover object-center"
                 priority={idx === 0}
               />
             </div>
@@ -106,6 +105,8 @@ export default function Home() {
         </div>
         <Marquee images={[
           '/Home/01.jpg',
+          '/Home/02.jpg',
+          '/Home/03.jpg',
           '/Home/03Web%202.jpg',
           '/Home/03Web%203.jpg',
           '/Home/03Web%204.jpg',
@@ -125,11 +126,8 @@ export default function Home() {
           '/Home/DSC_9290.jpg',
           '/Home/Fenicottero.jpg',
           '/Home/Hope02Web.jpg',
-          '/Home/IMG_0433.jpg',
+          '/Home/IMG_0443.jpg',
           '/Home/IMG_4935.jpg',
-          '/Home/IMG_4941.jpg',
-          '/Home/IMG_4961.jpg',
-          '/Home/IMG_4964.jpg',
           '/Home/Leone.jpg',
           '/Home/Leonida01Web.jpg',
           '/Home/Leopardo.jpg',

@@ -70,50 +70,58 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
     let rafId: number;
     const thetaVal = theta;
     const nVal = N;
+    let frameCount = 0;
 
     const loop = () => {
-      if (!isDragging.current) {
-        const diff = targetRotationRef.current - rotationRef.current;
-        rotationRef.current += diff * 0.1;
-      }
-
-      // Rotate the whole carousel drum
-      if (carouselRef.current) {
-        carouselRef.current.style.transform = `rotateY(${-rotationRef.current}deg)`;
-      }
-
-      // Apply breathing effect to each card via direct refs
-      for (let i = 0; i < nVal; i++) {
-        const card = cardRefs.current[i];
-        if (!card) continue;
-
-        // Calculate angular distance from center (0 = facing viewer)
-        let angleDiff = (i * thetaVal - rotationRef.current) % 360;
-        if (angleDiff > 180) angleDiff -= 360;
-        if (angleDiff < -180) angleDiff += 360;
-
-        const absDiff = Math.abs(angleDiff);
-
-        // Influence zone: 2 steps on each side for wider breathing wave
-        const influence = thetaVal * 2;
-        const proximity = Math.max(0, 1 - absDiff / influence);
-
-        // Smooth ease-in-out curve (breathing)
-        const smooth = (1 - Math.cos(proximity * Math.PI)) / 2;
-
-        // Scale: 0.65 (far side, small) → 1.15 (center, big & prominent)
-        const scale = 0.65 + 0.5 * smooth;
-        // Blur: 12px (side, very blurry) → 0px (center, crystal sharp)
-        const blur = 12 * (1 - smooth);
-        // Opacity: 0.3 (side, faded) → 1.0 (center, fully visible)
-        const opacity = 0.3 + 0.7 * smooth;
-
-        card.style.transform = `rotateY(${i * thetaVal}deg) translateZ(${radiusRef.current}px) scale(${scale})`;
-        card.style.filter = `blur(${blur}px)`;
-        card.style.opacity = `${opacity}`;
-      }
-
+      // Schedule next frame FIRST — ensures the loop never dies
       rafId = requestAnimationFrame(loop);
+      
+      frameCount++;
+
+      try {
+        if (!isDragging.current) {
+          const diff = targetRotationRef.current - rotationRef.current;
+          rotationRef.current += diff * 0.1;
+        }
+
+        // Rotate the whole carousel drum
+        if (carouselRef.current) {
+          carouselRef.current.style.transform = `rotateY(${-rotationRef.current}deg)`;
+        }
+
+        // Apply breathing effect to each card via direct refs
+        for (let i = 0; i < nVal; i++) {
+          const card = cardRefs.current[i];
+          if (!card) continue;
+
+          // Calculate angular distance from center (0 = facing viewer)
+          let angleDiff = (i * thetaVal - rotationRef.current) % 360;
+          if (angleDiff > 180) angleDiff -= 360;
+          if (angleDiff < -180) angleDiff += 360;
+
+          const absDiff = Math.abs(angleDiff);
+
+          // Influence zone: 2 steps on each side for wider breathing wave
+          const influence = thetaVal * 2;
+          const proximity = Math.max(0, 1 - absDiff / influence);
+
+          // Smooth ease-in-out curve (breathing)
+          const smooth = (1 - Math.cos(proximity * Math.PI)) / 2;
+
+          // Scale: 0.65 (far side, small) → 1.15 (center, big & prominent)
+          const scale = 0.65 + 0.5 * smooth;
+          // Blur: 12px (side, very blurry) → 0px (center, crystal sharp)
+          const blur = 12 * (1 - smooth);
+          // Opacity: 0.3 (side, faded) → 1.0 (center, fully visible)
+          const opacity = 0.3 + 0.7 * smooth;
+
+          card.style.transform = `rotateY(${i * thetaVal}deg) translateZ(${radiusRef.current}px) scale(${scale})`;
+          card.style.filter = `blur(${blur}px)`;
+          card.style.opacity = `${opacity}`;
+        }
+      } catch (err) {
+        console.error('[Hero3D] Animation error:', err);
+      }
     };
 
     loop();

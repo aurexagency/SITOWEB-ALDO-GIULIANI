@@ -77,8 +77,28 @@ export default function Home() {
   const pageContent = (
     <div ref={contentRef} className="w-full flex flex-col">
       {/* Hero Section */}
-      <section data-nav-transparent="true" className="relative h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-[var(--background)] px-6">
-        <div className="relative w-full max-w-[90vw] aspect-[4/5] md:h-[85dvh] md:w-auto z-0 overflow-hidden shadow-2xl">
+      <section data-nav-transparent="true" className="relative h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-[var(--background)]">
+        {/* Atmospheric Background Layer to fill the page */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          {initialHeroImages.map((src, idx) => (
+            <div 
+              key={`bg-${src}`} 
+              className={`absolute inset-0 transition-opacity duration-1500 ease-in-out blur-[100px] scale-110 ${idx === currentImageIdx ? 'opacity-40' : 'opacity-0'}`}
+            >
+              <Image
+                src={src}
+                alt=""
+                fill
+                className="object-cover"
+                priority={idx === 0}
+              />
+            </div>
+          ))}
+          <div className="absolute inset-0 bg-white/10" />
+        </div>
+
+        {/* Main 5:4 Hero Content */}
+        <div className="relative w-[92vw] aspect-[5/4] md:h-[70dvh] md:w-auto z-10 overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)] border border-white/10">
           {initialHeroImages.map((src, idx) => (
             <div 
               key={src} 
@@ -88,13 +108,13 @@ export default function Home() {
                 src={src}
                 alt="Hero Background"
                 fill
-                sizes="(max-width: 768px) 100vw, 70vw"
+                sizes="(max-width: 768px) 100vw, 85vw"
                 className="object-cover object-center"
                 priority={idx === 0}
               />
             </div>
           ))}
-          <div className="absolute inset-0 bg-black/10 pointer-events-none" />
+          <div className="absolute inset-0 bg-black/5 pointer-events-none" />
         </div>
       </section>
 

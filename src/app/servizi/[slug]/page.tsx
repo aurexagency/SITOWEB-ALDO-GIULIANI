@@ -163,7 +163,7 @@ const servicesData: Record<string, { title: string, subtitle: string, descriptio
     mainImage: '/Matrimoni/Caschet.jpg'
   },
   moda: {
-    title: 'Moda',
+    title: ' portrait ',
     subtitle: 'Estetica e precisione',
     description: 'Campagne pubblicitarie ed editoriali curati in ogni dettaglio, dove la luce scolpisce forme e texture per un impatto visivo senza compromessi.',
     images: [

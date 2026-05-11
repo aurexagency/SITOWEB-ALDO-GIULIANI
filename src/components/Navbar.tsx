@@ -47,7 +47,7 @@ export const Navbar = () => {
   const links = [
     { name: 'Home', href: '/' },
     { name: 'Matrimoni', href: '/servizi/matrimoni' },
-    { name: 'Moda', href: '/servizi/moda' },
+    { name: ' portrait ', href: '/servizi/moda' },
     { name: 'Pet Photo', href: '/servizi/petphoto' },
     { name: 'Sport', href: '/servizi/sport' },
     { name: 'WildLife', href: '/servizi/wildlife' },

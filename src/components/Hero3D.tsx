@@ -67,36 +67,28 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
     let raf: number;
 
     const loop = () => {
-      // Interpolate toward target when not dragging
       if (!isDragging.current) {
         rotationRef.current += (targetRotationRef.current - rotationRef.current) * 0.1;
       }
 
       if (sceneRef.current) {
-        // Rotate the whole drum
         sceneRef.current.style.transform = `rotateY(${-rotationRef.current}deg)`;
 
-        // Wave effect on every card
         const cards = sceneRef.current.querySelectorAll('.carousel-card') as NodeListOf<HTMLElement>;
         cards.forEach((card, i) => {
-          // Absolute angular position in radians
           const angRad = (i * theta - rotationRef.current) * Math.PI / 180;
           const cos = Math.cos(angRad);
-          
-          // Proximity: 1 at front, -1 at back. 
-          // We map the front half (0 to 1) to a smooth scale.
           const proximity = Math.max(0, cos);
-          const smooth = Math.pow(proximity, 2); // Squared for a nicer curve than linear
+          const smooth = Math.pow(proximity, 2);
 
-          // Specification-aligned values
           // Scale: 0.8 (side) -> 1.4 (center)
           const scale   = 0.8 + smooth * 0.6;
-          // Blur: 6px (side) -> 0px (center)
-          const blur    = 6 * (1 - smooth); 
-          // Opacity: 0.5 (side) -> 1.0 (center)
-          const opacity = 0.5 + smooth * 0.5;
-          // Z-Index: 0 (side) -> 20 (center)
-          const zIdx    = Math.round(smooth * 20);
+          // Blur: 8px (side) -> 0px (center)
+          const blur    = 8 * (1 - smooth); 
+          // Opacity: 0.4 (side) -> 1.0 (center)
+          const opacity = 0.4 + smooth * 0.6;
+          // Z-Index: ensure front images are on top of everything
+          const zIdx    = Math.round(smooth * 100);
           
           card.style.transform = `rotateY(${i * theta}deg) translateZ(${radiusRef.current}px) scale(${scale})`;
           card.style.filter    = `blur(${blur}px)`;
@@ -184,7 +176,7 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
       {/* 3D Carousel */}
       <div
         className="relative z-10 pointer-events-none"
-        style={{ perspective: '1200px' }}
+        style={{ perspective: '3000px' }}
       >
         {/*
           KEY STRUCTURAL FIX:

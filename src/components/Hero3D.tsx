@@ -191,7 +191,7 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
     <section
       ref={containerRef}
       data-nav-transparent="true"
-      className="relative h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-[var(--background)] cursor-grab active:cursor-grabbing"
+      className="relative h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-[var(--background)] cursor-grab active:cursor-grabbing touch-pan-y"
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
@@ -239,7 +239,7 @@ export const Hero3D: React.FC<Hero3DProps> = ({ images }) => {
               className="absolute pointer-events-auto cursor-pointer"
               style={{ transformStyle: 'preserve-3d' }}
               onClick={() => {
-                if (dragDistance.current < 10) {
+                if (dragDistance.current < 20) {
                   setLightboxImg(src);
                 }
               }}

@@ -76,7 +76,7 @@ export const Navbar = () => {
               <Link 
                 key={link.name} 
                 href={link.href}
-                className={`text-[10px] tracking-[0.2em] uppercase transition-all duration-300 hover:text-[var(--champagne)] ${pathname === link.href ? 'text-[var(--champagne)]' : (pathname === '/' && !isScrolled ? 'text-white/70' : 'text-[var(--foreground)]/70')}`}
+                className={`text-[12px] font-medium tracking-[0.2em] uppercase transition-all duration-300 hover:-translate-y-[1px] hover:text-[var(--champagne)] ${pathname === link.href ? 'text-[var(--champagne)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]' : (pathname === '/' && !isScrolled ? 'text-white/95 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]' : 'text-[var(--foreground)] drop-shadow-[0_1px_2px_rgba(0,0,0,0.15)] hover:drop-shadow-[0_3px_5px_rgba(0,0,0,0.2)]')}`}
               >
                 {link.name}
               </Link>
@@ -107,7 +107,7 @@ export const Navbar = () => {
                 href={link.href}
                 onClick={() => setIsMenuOpen(false)}
                 style={{ transitionDelay: `${index * 50}ms` }}
-                className={`text-3xl font-serif tracking-[0.2em] uppercase transition-all duration-700 ${isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'} ${pathname === link.href ? 'text-[var(--champagne)]' : 'text-[#1A1A1A] hover:text-[var(--champagne)]'}`}
+                className={`text-4xl font-serif tracking-[0.2em] uppercase transition-all duration-700 drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)] hover:-translate-y-1 ${isMenuOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'} ${pathname === link.href ? 'text-[var(--champagne)]' : 'text-[#1A1A1A] hover:text-[var(--champagne)]'}`}
               >
                 {link.name}
               </Link>

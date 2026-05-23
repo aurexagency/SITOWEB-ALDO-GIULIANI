@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Button } from './Button';
 
 interface HeroFullscreenProps {
@@ -29,7 +30,7 @@ export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({
   title = 'ALDO GIULIANI',
   subtitle = 'PHOTOGRAPHY',
   tagline = 'L\'eternità di un istante racchiusa nella luce naturale.',
-  ctaText = 'Chiedi un Preventivo',
+  ctaText = 'CHIEDI UN PREVENTIVO',
   onCtaClick,
 }) => {
   const [animate, setAnimate] = useState(false);
@@ -156,13 +157,14 @@ export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({
             animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
         >
-          <Button
-            variant="outline"
-            className="border-[var(--champagne)] text-[var(--champagne)] bg-black/20 hover:bg-[var(--champagne)] hover:text-black hover:scale-105 duration-500 shadow-lg shadow-[rgba(197,160,89,0.1)] px-10 py-4"
-            onClick={onCtaClick}
-          >
-            {ctaText}
-          </Button>
+          <Link href="/preventivo">
+            <Button
+              variant="outline"
+              className="border-[var(--champagne)] text-[var(--champagne)] bg-black/20 hover:bg-[var(--champagne)] hover:text-black hover:scale-105 duration-500 shadow-lg shadow-[rgba(197,160,89,0.1)] px-10 py-4"
+            >
+              {ctaText}
+            </Button>
+          </Link>
         </div>
       </div>
 

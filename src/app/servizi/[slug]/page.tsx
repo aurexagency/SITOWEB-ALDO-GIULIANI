@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Marquee } from '@/components/Marquee';
 import { Button } from '@/components/Button';
@@ -289,9 +290,26 @@ export default async function ServicePage(props: { params: Promise<{ slug: strin
       {/* Call to Action for the specific service */}
       <section className="py-32 bg-[var(--foreground)] text-center px-6">
         <h2 className="font-serif text-4xl text-white mb-8">Vuoi raccontare la tua storia?</h2>
-        <Button variant="primary" className="border-white text-white hover:bg-white hover:text-[var(--foreground)]">
-          Preventivo {service.title}
-        </Button>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          {params.slug !== 'wildlife' && (
+            <Link href={`/preventivo?servizio=${params.slug}`}>
+              <Button
+                variant="outline"
+                className="border-[var(--champagne)] text-[var(--champagne)] bg-black/20 hover:bg-[var(--champagne)] hover:text-black hover:scale-105 duration-500 shadow-lg shadow-[rgba(197,160,89,0.1)] px-10 py-4"
+              >
+                Preventivo {service.title}
+              </Button>
+            </Link>
+          )}
+          {(params.slug === 'sport' || params.slug === 'wildlife') && (
+            <Button
+              variant="outline"
+              className="border-[var(--champagne)] text-[var(--champagne)] bg-black/20 hover:bg-[var(--champagne)] hover:text-black hover:scale-105 duration-500 shadow-lg shadow-[rgba(197,160,89,0.1)] px-10 py-4"
+            >
+              COMPRA FOTO
+            </Button>
+          )}
+        </div>
       </section>
     </main>
   );

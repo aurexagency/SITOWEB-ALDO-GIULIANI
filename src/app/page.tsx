@@ -5,27 +5,9 @@ import Image from 'next/image';
 import { Button } from '@/components/Button';
 import { Marquee } from '@/components/Marquee';
 import { MyStyle } from '@/components/MyStyle';
-import { Hero3D } from '@/components/Hero3D';
+import { HeroFullscreen } from '@/components/HeroFullscreen';
+import { ServicesScroll } from '@/components/ServicesScroll';
 
-const initialHeroImages = [
-  '/Home/hero/01.jpg',
-  '/Home/hero/02.jpg',
-  '/Home/hero/03.jpg',
-  '/Home/hero/04.jpg',
-  '/Home/hero/05.jpg',
-  '/Home/hero/06.jpg',
-  '/Home/hero/07.jpg',
-  '/Home/hero/08.jpg',
-  '/Home/hero/09.jpg',
-  '/Home/hero/10.jpg',
-  '/Home/hero/11.jpg',
-  '/Home/hero/12.jpg',
-  '/Home/hero/13.jpg',
-  '/Home/hero/14.jpg',
-  '/Home/hero/15.jpg',
-  '/Home/hero/16.jpg',
-  '/Home/hero/17.jpg'
-];
 
 export default function Home() {
   const contentRef = useRef<HTMLDivElement>(null);
@@ -69,57 +51,15 @@ export default function Home() {
   const pageContent = (
     <div ref={contentRef} className="w-full flex flex-col">
       {/* Hero Section */}
-      <Hero3D images={initialHeroImages} />
+      <HeroFullscreen
+        onCtaClick={() => {
+          const footer = document.querySelector('section:last-of-type');
+          footer?.scrollIntoView({ behavior: 'smooth' });
+        }}
+      />
 
-      {/* Marquee Section */}
-      <section className="py-16 bg-[var(--background)]">
-        <div className="text-center mb-12">
-          <h2 className="font-serif text-3xl text-[var(--foreground)]">Servizi</h2>
-        </div>
-        <Marquee images={[
-          '/Home/01.jpg',
-          '/Home/02.jpg',
-          '/Home/03.jpg',
-          '/Home/03Web%202.jpg',
-          '/Home/03Web%203.jpg',
-          '/Home/03Web%204.jpg',
-          '/Home/05Web%202.jpg',
-          '/Home/05Web.jpg',
-          '/Home/Alce.jpg',
-          '/Home/Atletica02.jpg',
-          '/Home/BeachVolley03.jpg',
-          '/Home/Boxe02.jpg',
-          '/Home/Calcio01.jpg',
-          '/Home/Calcio02.jpg',
-          '/Home/Calcio07.jpg',
-          '/Home/DSC00931-2.jpg',
-          '/Home/DSC01314-2.jpg',
-          '/Home/DSC02276-2.jpg',
-          '/Home/DSC_0415.jpg',
-          '/Home/DSC_9290.jpg',
-          '/Home/Fenicottero.jpg',
-          '/Home/Hope02Web.jpg',
-          '/Home/IMG_0443.jpg',
-          '/Home/IMG_4935.jpg',
-          '/Home/Leone.jpg',
-          '/Home/Leonida01Web.jpg',
-          '/Home/Leopardo.jpg',
-          '/Home/Linci.jpg',
-          '/Home/Orso.jpg',
-          '/Home/Pellicano%20Riccio.jpg',
-          '/Home/Vela02.jpg',
-          '/Home/Vela05.jpg',
-          '/Home/_DSC3762.jpg',
-          '/Home/_DSC3768.jpg',
-          '/Home/_DSC4119.jpg',
-          '/Home/_DSC4241.jpg',
-          '/Home/_DSC4450.jpg',
-          '/Home/_DSC4529.jpg',
-          '/Home/_DSC4539.jpg',
-          '/Home/_DSC4860.jpg',
-          '/Home/_DSC5455.jpg'
-        ]} />
-      </section>
+      {/* Services Section */}
+      <ServicesScroll />
 
       {/* My Style Section */}
       <MyStyle />

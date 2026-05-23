@@ -53,20 +53,28 @@ export const Navbar = () => {
     { name: 'WildLife', href: '/servizi/wildlife' },
   ];
 
-  const navBgClass = isMenuOpen 
-    ? 'bg-transparent py-4' 
-    : (isScrolled ? 'bg-[var(--background)]/90 backdrop-blur-xl py-4 shadow-sm' : 'bg-transparent py-6');
+  // La navbar è SEMPRE trasparente — solo il blur e il gradiente cambiano leggermente
+  const navBgClass = isMenuOpen
+    ? 'bg-transparent py-4'
+    : isScrolled
+      ? 'bg-black/10 backdrop-blur-md py-4'
+      : 'bg-transparent py-6';
+
+  // Testo: bianco con forte drop-shadow per massima leggibilità su qualsiasi sfondo
+  const linkColorClass = 'text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]';
 
   return (
     <>
       <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${navBgClass}`}>
+        {/* Gradiente permanente che garantisce leggibilità sopra qualsiasi sfondo */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/15 to-transparent pointer-events-none" />
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between relative z-50">
           <Link href="/" className="relative h-10 w-28 md:h-12 md:w-32 flex items-center">
             <Image 
               src="/logo.png" 
               alt="Aldo Giuliani Logo" 
               fill
-              className={`object-contain transition-all duration-500 ${pathname === '/' && !isScrolled && !isMenuOpen ? 'brightness-0 invert' : ''}`}
+              className="object-contain transition-all duration-500 brightness-0 invert drop-shadow-[0_2px_10px_rgba(0,0,0,0.9)]"
             />
           </Link>
 
@@ -76,7 +84,7 @@ export const Navbar = () => {
               <Link 
                 key={link.name} 
                 href={link.href}
-                className={`text-[12px] font-medium tracking-[0.2em] uppercase transition-all duration-300 hover:-translate-y-[1px] hover:text-[var(--champagne)] ${pathname === link.href ? 'text-[var(--champagne)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]' : (pathname === '/' && !isScrolled ? 'text-white/95 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]' : 'text-[var(--foreground)] drop-shadow-[0_1px_2px_rgba(0,0,0,0.15)] hover:drop-shadow-[0_3px_5px_rgba(0,0,0,0.2)]')}`}
+                className={`text-[12px] font-medium tracking-[0.2em] uppercase transition-all duration-300 hover:-translate-y-[1px] hover:text-[var(--champagne)] drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)] ${pathname === link.href ? 'text-[var(--champagne)]' : 'text-white/95'}`}
               >
                 {link.name}
               </Link>
@@ -89,8 +97,8 @@ export const Navbar = () => {
             className="md:hidden flex flex-col justify-center items-end w-8 h-8 gap-1.5 focus:outline-none z-[60] relative"
             aria-label="Toggle Menu"
           >
-            <span className={`h-[1px] bg-current transition-all duration-300 ease-out ${isMenuOpen ? 'w-8 rotate-45 translate-y-[3.5px]' : 'w-8'} ${pathname === '/' && !isScrolled && !isMenuOpen ? 'bg-white' : 'bg-[var(--foreground)]'}`}></span>
-            <span className={`h-[1px] bg-current transition-all duration-300 ease-out ${isMenuOpen ? 'w-8 -rotate-45 -translate-y-[3.5px]' : 'w-5'} ${pathname === '/' && !isScrolled && !isMenuOpen ? 'bg-white' : 'bg-[var(--foreground)]'}`}></span>
+            <span className={`h-[1px] bg-white transition-all duration-300 ease-out drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] ${isMenuOpen ? 'w-8 rotate-45 translate-y-[3.5px]' : 'w-8'}`}></span>
+            <span className={`h-[1px] bg-white transition-all duration-300 ease-out drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)] ${isMenuOpen ? 'w-8 -rotate-45 -translate-y-[3.5px]' : 'w-5'}`}></span>
           </button>
         </div>
       </nav>

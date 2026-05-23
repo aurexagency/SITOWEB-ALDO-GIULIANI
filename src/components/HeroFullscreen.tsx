@@ -14,14 +14,14 @@ interface HeroFullscreenProps {
 }
 
 const DEFAULT_HERO_IMAGES = [
-  '/Home/Hero/01.jpg',
-  '/Home/Hero/04.jpg',
-  '/Home/Hero/05.jpg',
-  '/Home/Hero/07.jpg',
-  '/Home/Hero/10.jpg',
-  '/Home/Hero/11.jpg',
-  '/Home/Hero/13.jpg',
-  '/Home/Hero/17.jpg',
+  '/Home/hero/01.jpg',
+  '/Home/hero/04.jpg',
+  '/Home/hero/05.jpg',
+  '/Home/hero/07.jpg',
+  '/Home/hero/10.jpg',
+  '/Home/hero/11.jpg',
+  '/Home/hero/13.jpg',
+  '/Home/hero/17.jpg',
 ];
 
 export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({

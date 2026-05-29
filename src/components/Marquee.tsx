@@ -123,25 +123,24 @@ export const Marquee: React.FC<MarqueeProps> = ({ images, duration = DEFAULT_ANI
       >
         <div
           ref={trackRef}
-          className="flex w-max items-center gap-8"
+          className="flex w-max items-center gap-8 h-[350px] md:h-[450px]"
           style={{ animation: `marquee ${duration}s linear infinite`, willChange: 'transform' }}
           onMouseDown={handleMouseDown}
         >
           {duplicatedImages.map((src, index) => (
             <div
               key={index}
-              className="relative w-[350px] md:w-[500px] aspect-[5/4] shrink-0 overflow-hidden group"
+              className="relative h-full w-auto shrink-0 overflow-hidden group"
               style={{ cursor: isDragging ? 'grabbing' : 'pointer' }}
               onClick={() => {
                 if (!hasDragged.current) setSelectedImage(src);
               }}
             >
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={src}
                 alt={`Gallery Image ${index + 1}`}
-                fill
-                className="object-cover transition-transform duration-700 md:group-hover:scale-105"
-                sizes="(max-width: 768px) 100vw, 600px"
+                className="h-full w-auto object-contain transition-transform duration-700 md:group-hover:scale-105"
                 draggable={false}
               />
               <div className="absolute inset-0 bg-black/20 opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">

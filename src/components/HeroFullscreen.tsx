@@ -7,6 +7,7 @@ import { Button } from './Button';
 
 interface HeroFullscreenProps {
   images?: string[];
+  mobileImages?: string[];
   title?: string;
   subtitle?: string;
   tagline?: string;
@@ -14,6 +15,7 @@ interface HeroFullscreenProps {
   onCtaClick?: () => void;
 }
 
+// Desktop: immagini landscape originali
 const DEFAULT_HERO_IMAGES = [
   '/Home/hero/01.jpg',
   '/Home/hero/04.jpg',
@@ -25,14 +27,46 @@ const DEFAULT_HERO_IMAGES = [
   '/Home/hero/17.jpg',
 ];
 
+// Mobile: immagini verticali native dalla cartella hero- mobile
+const DEFAULT_HERO_MOBILE_IMAGES = [
+  '/Home/hero- mobile/1.jpeg',
+  '/Home/hero- mobile/2.jpeg',
+  '/Home/hero- mobile/BeachVolley03..jpg',
+  '/Home/hero- mobile/IMG_4935.jpg',
+  '/Home/hero- mobile/Linci-.jpg',
+  '/Home/hero- mobile/_DSC4450.jpg',
+];
+
+/**
+ * Hook per rilevare schermi mobile (< 768px).
+ * Restituisce false durante SSR per evitare hydration mismatch.
+ */
+function useIsMobile(): boolean {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    setIsMobile(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
+  return isMobile;
+}
+
 export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({
   images = DEFAULT_HERO_IMAGES,
+  mobileImages = DEFAULT_HERO_MOBILE_IMAGES,
   title = 'ALDO GIULIANI',
   subtitle = 'PHOTOGRAPHY',
   tagline = 'L\'eternità di un istante racchiusa nella luce naturale.',
   ctaText = 'CHIEDI UN PREVENTIVO',
   onCtaClick,
 }) => {
+  // Art direction: switcha automaticamente tra immagini desktop e mobile
+  const isMobile = useIsMobile();
+  const activeImages = isMobile ? mobileImages : images;
   const [animate, setAnimate] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -44,15 +78,20 @@ export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({
     return () => clearTimeout(timer);
   }, []);
 
+  // Reset indice quando cambia il set di immagini (es. rotazione schermo)
   useEffect(() => {
-    if (!images || images.length <= 1) return;
+    setCurrentIndex(0);
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (!activeImages || activeImages.length <= 1) return;
     
     // Gestisce la rotazione automatica delle immagini (slideshow)
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
+      setCurrentIndex((prev) => (prev + 1) % activeImages.length);
     }, 6000); // Cambia immagine ogni 6 secondi
     return () => clearInterval(interval);
-  }, [images]);
+  }, [activeImages]);
 
   const handleScrollDown = () => {
     window.scrollTo({
@@ -66,8 +105,9 @@ export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({
       data-nav-transparent="true"
       className="relative h-[100dvh] w-full flex items-center justify-center overflow-hidden bg-black"
     >
-      {/* 1 & 2. IMMAGINI BACKGROUND (Slideshow) */}
-      {images.map((img, index) => (
+      {/* 1 & 2. IMMAGINI BACKGROUND (Slideshow con Art Direction Responsive) */}
+      {/* Desktop: landscape da /Home/hero/ — Mobile: verticali da /Home/hero- mobile/ */}
+      {activeImages.map((img, index) => (
         <div key={img} className="absolute inset-0 z-0">
           <Image
             src={img}
@@ -75,7 +115,9 @@ export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({
             fill
             priority={index === 0}
             sizes="100vw"
-            className={`object-cover object-center transition-all duration-[2000ms] ease-in-out ${
+            className={`object-cover transition-all duration-[2000ms] ease-in-out ${
+              isMobile ? 'object-[center_top]' : 'object-center'
+            } ${
               animate && index === currentIndex
                 ? 'opacity-100 scale-100'
                 : 'opacity-0 scale-105'

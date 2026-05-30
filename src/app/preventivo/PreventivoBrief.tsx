@@ -27,6 +27,8 @@ export function PreventivoBrief() {
   const searchParams = useSearchParams();
   const [animate, setAnimate] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     nome: '',
     email: '',
@@ -62,9 +64,34 @@ export function PreventivoBrief() {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setIsLoading(true);
+    setSubmitError(null);
+
+    try {
+      const res = await fetch('/api/preventivo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok || !json.ok) {
+        throw new Error(json.error || 'Errore sconosciuto.');
+      }
+
+      setSubmitted(true);
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error
+          ? err.message
+          : 'Impossibile inviare il messaggio. Riprova tra qualche istante.'
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   /* ─────────────────────────────────────────────────────── Confirmation */
@@ -349,17 +376,47 @@ export function PreventivoBrief() {
               <div className="w-20 h-[1px] bg-gradient-to-l from-transparent to-[var(--champagne)]/25" />
             </div>
 
+            {/* Bottone submit con stati loading / default */}
             <button
-              type="button"
-              disabled
-              className="px-14 py-4 border border-white/15 text-white/25 text-[11px] tracking-[0.45em] uppercase font-medium bg-transparent cursor-not-allowed"
+              type="submit"
+              disabled={isLoading}
+              className={`relative px-14 py-4 border text-[11px] tracking-[0.45em] uppercase font-medium bg-transparent transition-all duration-500 overflow-hidden group ${
+                isLoading
+                  ? 'border-white/15 text-white/30 cursor-wait'
+                  : 'border-[var(--champagne)] text-[var(--champagne)] hover:bg-[var(--champagne)] hover:text-black cursor-pointer'
+              }`}
             >
-              Invia la Richiesta
+              {/* Shimmer hover overlay */}
+              {!isLoading && (
+                <span className="absolute inset-0 bg-[var(--champagne)] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+              )}
+
+              <span className="relative z-10 flex items-center justify-center gap-3">
+                {isLoading ? (
+                  <>
+                    {/* Spinner sottile */}
+                    <span className="inline-block w-3 h-3 border border-white/30 border-t-white/70 rounded-full animate-spin" />
+                    Invio in corso…
+                  </>
+                ) : (
+                  'Invia la Richiesta'
+                )}
+              </span>
             </button>
 
-            <p className="mt-4 text-[9px] text-white/20 tracking-[0.35em] uppercase font-light">
-              Configurazione invio in corso…
-            </p>
+            {/* Messaggio di errore */}
+            {submitError && (
+              <p className="mt-5 text-[10px] tracking-[0.2em] text-red-400/80 font-light max-w-sm mx-auto leading-relaxed">
+                ✦ {submitError}
+              </p>
+            )}
+
+            {/* Privacy note */}
+            {!submitError && (
+              <p className="mt-5 text-[9px] text-white/20 tracking-[0.25em] uppercase font-light">
+                I tuoi dati sono al sicuro e non verranno condivisi.
+              </p>
+            )}
           </div>
 
         </form>

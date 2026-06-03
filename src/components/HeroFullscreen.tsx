@@ -132,17 +132,18 @@ export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({
       <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,_transparent_30%,_rgba(0,0,0,0.45))]" />
 
       {/* 4. CONTENUTO CENTRALE */}
-      <div className="relative z-20 text-center px-6 max-w-4xl flex flex-col items-center select-none">
+      <div className="relative z-20 text-center px-6 w-full flex flex-col items-center select-none">
         
         {/* Titolo Principale (Immagine SVG fluida) */}
         <img
           src="/Scritta aldogiuliani.svg"
           alt={title}
-          className={`max-w-full mb-6 transition-all duration-[1200ms] ease-out delay-500 ${
+          className={`mb-6 transition-all duration-[1200ms] ease-out delay-500 ${
             animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
           style={{ 
-            width: 'clamp(280px, 35vw, 650px)',
+            width: 'clamp(1120px, 140vw, 2600px)',
+            maxWidth: '90vw',
             height: 'auto',
             filter: 'drop-shadow(0px 4px 20px rgba(0, 0, 0, 0.7))'
           }}

@@ -27,15 +27,16 @@ export const MyStyle: React.FC = () => {
         </div>
 
         <div 
-          className="w-full aspect-[2/3] relative mb-20 md:mb-32 cursor-pointer group overflow-hidden"
+          className="w-full relative mb-20 md:mb-32 cursor-pointer group overflow-hidden"
           onClick={() => setSelectedImage("/Home/Il%20mio%20stile/Sport03.avif")}
         >
           <Image
             src="/Home/Il%20mio%20stile/Sport03.avif"
             alt="Editorial style photography"
-            fill
+            width={1000}
+            height={1500}
             unoptimized={true}
-            className="object-cover transition-transform duration-1000 md:group-hover:scale-105"
+            className="w-full h-auto object-contain transition-transform duration-1000 md:group-hover:scale-105"
             sizes="100vw"
           />
           <div className="absolute inset-0 bg-black/10 opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">

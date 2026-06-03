@@ -134,23 +134,19 @@ export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({
       {/* 4. CONTENUTO CENTRALE */}
       <div className="relative z-20 text-center px-6 max-w-4xl flex flex-col items-center select-none">
         
-        {/* Titolo Principale (Immagine PNG) */}
-        <div 
-          className={`relative w-[90vw] max-w-[800px] h-[12vh] md:h-[18vh] mb-4 transition-all duration-[1200ms] ease-out delay-500 ${
+        {/* Titolo Principale (Immagine SVG fluida) */}
+        <img
+          src="/Scritta aldogiuliani.svg"
+          alt={title}
+          className={`max-w-full mb-6 transition-all duration-[1200ms] ease-out delay-500 ${
             animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
           style={{ 
+            width: 'clamp(280px, 35vw, 650px)',
+            height: 'auto',
             filter: 'drop-shadow(0px 4px 20px rgba(0, 0, 0, 0.7))'
           }}
-        >
-          <Image
-            src="/Scritta aldogiuliani.png"
-            alt={title}
-            fill
-            className="object-contain"
-            priority
-          />
-        </div>
+        />
 
         {/* Sottotitolo (Sans-serif minimale spaziatissimo) */}
         <p

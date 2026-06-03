@@ -284,7 +284,7 @@ export default async function ServicePage(props: { params: Promise<{ slug: strin
         <div className="text-center mb-12">
           <h2 className="text-sm tracking-[0.3em] uppercase text-[var(--champagne)]">Galleria</h2>
         </div>
-        <Marquee images={service.images} duration={640} />
+        <Marquee images={service.images} speed={0.5} />
       </section>
 
       {/* Call to Action for the specific service */}

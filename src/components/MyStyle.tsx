@@ -27,7 +27,7 @@ export const MyStyle: React.FC = () => {
         </div>
 
         <div 
-          className="w-full h-[50vh] md:h-[70vh] relative mb-20 md:mb-32 cursor-pointer group overflow-hidden"
+          className="w-[90%] md:w-[60%] lg:w-[40%] mx-auto aspect-[2/3] relative mb-20 md:mb-32 cursor-pointer group overflow-hidden"
           onClick={() => setSelectedImage("/Home/Il%20mio%20stile/Sport03.avif")}
         >
           <Image

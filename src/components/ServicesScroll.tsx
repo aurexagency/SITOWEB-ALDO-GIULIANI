@@ -96,7 +96,6 @@ export const ServicesScroll: React.FC = () => {
       {/* Intestazione della sezione */}
       <div className="container mx-auto px-6 mb-12 flex justify-between items-end">
         <div>
-          <h2 className="text-4xl md:text-5xl font-serif text-[var(--foreground)]">Cosa fotografo</h2>
           <p className="font-sans text-[var(--champagne)] tracking-widest uppercase text-sm mt-4">Servizi</p>
         </div>
       </div>

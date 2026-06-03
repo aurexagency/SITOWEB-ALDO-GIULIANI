@@ -4,6 +4,9 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from './Button';
+import { Allura } from 'next/font/google';
+
+const allura = Allura({ weight: '400', subsets: ['latin'], display: 'swap' });
 
 interface HeroFullscreenProps {
   images?: string[];
@@ -134,6 +137,15 @@ export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({
       {/* 4. CONTENUTO CENTRALE */}
       <div className="relative z-20 text-center px-6 w-full flex flex-col items-center select-none">
         
+        {/* Titolo Principale (Font Allura) */}
+        <h1
+          className={`${allura.className} text-[15vw] md:text-[8vw] leading-none text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] transition-all duration-[1200ms] ease-out mb-6 delay-500 ${
+            animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+          }`}
+        >
+          Aldo Giuliani
+        </h1>
+
         {/* Sottotitolo (Sans-serif minimale spaziatissimo) */}
         <p
           className={`text-xs md:text-sm tracking-[0.6em] text-white/80 uppercase font-light mb-8 transition-all duration-[1200ms] ease-out delay-700 ${

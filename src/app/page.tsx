@@ -13,44 +13,36 @@ import { ServicesScroll } from '@/components/ServicesScroll';
 export default function Home() {
   const contentRef = useRef<HTMLDivElement>(null);
 
-  // Infinite Scroll Logic
-  useEffect(() => {
-    const content = contentRef.current;
-    if (!content) return;
-
-    let isScrolling = false;
-
+  // 1. Logica del Vero Loop Infinito Verticale
+  useEffect(() => { 
     const handleScroll = () => {
-      if (isScrolling) return;
+      if (!contentRef.current) return;
 
-      const contentHeight = content.offsetHeight;
-      const scrollTop = window.scrollY;
+      // Calcoliamo l'altezza totale del div che contiene TUTTO
+      const totalHeight = contentRef.current.scrollHeight;
+      
+      // La metà esatta corrisponde alla fine del primo blocco {pageContent}
+      const halfHeight = totalHeight / 2;
 
-      if (scrollTop >= contentHeight) {
-        isScrolling = true;
-        window.scrollTo({ top: scrollTop - contentHeight, behavior: 'instant' });
-        setTimeout(() => { isScrolling = false; }, 20);
-      } else if (scrollTop <= 0) {
-        isScrolling = true;
-        window.scrollTo({ top: scrollTop + contentHeight, behavior: 'instant' });
-        setTimeout(() => { isScrolling = false; }, 20);
+      // L'illusione "Antigravity": se superiamo la metà, riportiamo lo scroll in alto
+      // Sottraiamo halfHeight per mantenere l'inerzia esatta dello scroll dell'utente
+      if (window.scrollY >= halfHeight) {
+        window.scrollTo({ 
+          top: window.scrollY - halfHeight, 
+          behavior: 'auto' // 'auto' rende il salto istantaneo e invisibile
+        });
       }
     };
 
+    // Aggiungiamo l'ascoltatore dello scroll. passive: true migliora le performance
     window.addEventListener('scroll', handleScroll, { passive: true });
     
-    // Initial offset so user can scroll up immediately
-    if (window.scrollY === 0) {
-      window.scrollTo({ top: 10, behavior: 'instant' });
-    }
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, []);
+    // Pulizia dell'evento quando il componente viene smontato
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []); 
 
   const pageContent = (
-    <div ref={contentRef} className="w-full flex flex-col">
+    <div className="w-full flex flex-col">
       {/* Hero Section */}
       <HeroFullscreen
         onCtaClick={() => {
@@ -81,7 +73,8 @@ export default function Home() {
   );
 
   return (
-    <main className="w-full relative">
+    // Il ref ci serve per misurare l'altezza totale
+    <main ref={contentRef} className="relative w-full bg-[var(--background)]">
       {pageContent}
       {pageContent}
     </main>

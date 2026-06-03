@@ -136,6 +136,7 @@ export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({
             fill
             priority={index === 0}
             sizes="100vw"
+            unoptimized={img.endsWith('.avif')}
             className={`object-cover transition-all duration-[2000ms] ease-in-out ${
               isMobile ? 'object-[center_top]' : 'object-center'
             } ${

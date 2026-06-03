@@ -118,7 +118,7 @@ export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({
             className={`object-cover transition-all duration-[2000ms] ease-in-out ${
               isMobile ? 'object-[center_top]' : 'object-center'
             } ${
-              animate && index === currentIndex
+              (animate ? index === currentIndex : index === 0)
                 ? 'opacity-100 scale-100'
                 : 'opacity-0 scale-105'
             }`}
@@ -129,33 +129,28 @@ export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({
       {/* 3. OVERLAY DI LUSSO (Vignettatura scura radiale e lineare) */}
       {/* Garantisce un contrasto eccellente per logo, testi e pulsanti bianchi/oro */}
       <div className="absolute inset-0 z-10 bg-gradient-to-b from-black/50 via-transparent to-black/80" />
-      <div className="absolute inset-0 z-10 bg-radial-[circle_at_center,_transparent_30%,_rgba(0,0,0,0.45)]" />
+      <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,_transparent_30%,_rgba(0,0,0,0.45))]" />
 
       {/* 4. CONTENUTO CENTRALE */}
       <div className="relative z-20 text-center px-6 max-w-4xl flex flex-col items-center select-none">
         
-        {/* Titolo Principale (Serif Elegante — Effetto 3D Luxury) */}
-        <h1
-          className={`font-serif text-5xl md:text-8xl text-white tracking-wider mb-2 transition-all duration-[1200ms] ease-out delay-500 ${
+        {/* Titolo Principale (Immagine PNG) */}
+        <div 
+          className={`relative w-[90vw] max-w-[800px] h-[12vh] md:h-[18vh] mb-4 transition-all duration-[1200ms] ease-out delay-500 ${
             animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
-          style={{
-            textShadow: `
-              0 0 80px rgba(197, 160, 89, 0.18),
-              0 0 40px rgba(197, 160, 89, 0.10),
-              1px 2px 0px rgba(0, 0, 0, 0.95),
-              2px 4px 0px rgba(0, 0, 0, 0.85),
-              3px 6px 0px rgba(0, 0, 0, 0.75),
-              4px 8px 0px rgba(0, 0, 0, 0.65),
-              5px 10px 0px rgba(0, 0, 0, 0.55),
-              6px 12px 0px rgba(0, 0, 0, 0.40),
-              7px 14px 0px rgba(0, 0, 0, 0.25),
-              8px 20px 40px rgba(0, 0, 0, 0.70)
-            `,
+          style={{ 
+            filter: 'drop-shadow(0px 4px 20px rgba(0, 0, 0, 0.7))'
           }}
         >
-          {title}
-        </h1>
+          <Image
+            src="/Scritta aldogiuliani.png"
+            alt={title}
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
 
         {/* Sottotitolo (Sans-serif minimale spaziatissimo) */}
         <p

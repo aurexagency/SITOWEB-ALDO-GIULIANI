@@ -137,7 +137,7 @@ export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({
             priority={index === 0}
             sizes="100vw"
             unoptimized={img.endsWith('.avif')}
-            className={`object-contain transition-all duration-[2000ms] ease-in-out ${
+            className={`object-cover transition-all duration-[2000ms] ease-in-out ${
               isMobile ? 'object-[center_top]' : 'object-center'
             } ${
               (animate ? index === currentIndex : index === 0)

@@ -161,7 +161,7 @@ const servicesData: Record<string, { title: string, subtitle: string, descriptio
       '/Matrimoni/_DSC6247.jpg',
       '/Matrimoni/_DSC6337.jpg'
     ],
-    mainImage: '/Matrimoni/Caschet.jpg'
+    mainImage: '/Matrimoni/Wed%20Page.avif'
   },
   moda: {
     title: ' portrait ',
@@ -203,14 +203,14 @@ const servicesData: Record<string, { title: string, subtitle: string, descriptio
       '/Pet%20Photography/Leonida01Web.jpg',
       '/Pet%20Photography/Xena01Web.jpg',
     ],
-    mainImage: '/Pet%20Photography/01Web.jpg'
+    mainImage: '/Pet%20Photography/Petpage.avif'
   },
   sport: {
     title: 'Sport',
     subtitle: 'Dinamismo e potenza',
     description: 'Catturare l\'attimo di massima tensione, lo sforzo e la vittoria. Fotografia sportiva che esalta il gesto atletico con stile editoriale.',
     images: ['/Sport/Atletica01.jpg', '/Sport/Atletica02.jpg', '/Sport/Atletica03.jpg', '/Sport/Atletica04.jpg', '/Sport/Basket02.jpg', '/Sport/Basket03.jpg', '/Sport/BeachVolley01.jpg', '/Sport/BeachVolley02.jpg', '/Sport/BeachVolley03.jpg', '/Sport/Boxe01.jpg', '/Sport/Boxe02.jpg', '/Sport/Boxe03.jpg', '/Sport/Boxe04.jpg', '/Sport/Calcio01.jpg', '/Sport/Calcio02.jpg', '/Sport/Calcio03.jpg', '/Sport/Calcio04.jpg', '/Sport/Calcio05.jpg', '/Sport/Calcio06.jpg', '/Sport/Calcio07.jpg', '/Sport/Vela01.jpg', '/Sport/Vela02.jpg', '/Sport/Vela03.jpg', '/Sport/Vela04.jpg', '/Sport/Vela05.jpg'],
-    mainImage: '/Sport/Basket01.jpg'
+    mainImage: '/Sport/Sportpage.avif'
   },
   wildlife: {
     title: 'WildLife',
@@ -232,7 +232,7 @@ const servicesData: Record<string, { title: string, subtitle: string, descriptio
       '/WildLife/Tigre.jpg',
       '/WildLife/Volpe.jpg',
     ],
-    mainImage: '/WildLife/Leone.jpg'
+    mainImage: '/WildLife/Wildpage.avif'
   }
 };
 
@@ -247,13 +247,14 @@ export default async function ServicePage(props: { params: Promise<{ slug: strin
   return (
     <main className="min-h-screen bg-[var(--background)]">
       {/* Service Hero */}
-      <section data-nav-transparent="true" className="relative h-[70vh] w-full flex items-center justify-center overflow-hidden">
+      <section data-nav-transparent="true" className="relative h-[70vh] md:h-auto md:aspect-video w-full flex items-center justify-center overflow-hidden">
         <Image
           src={service.mainImage}
           alt={service.title}
           fill
           className="object-cover"
           priority
+          unoptimized={service.mainImage.endsWith('.avif')}
         />
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10 text-center px-6 mt-16">

@@ -36,7 +36,7 @@ export const MyStyle: React.FC = () => {
             width={1000}
             height={1500}
             unoptimized={true}
-            className="w-full h-auto object-contain transition-transform duration-1000 md:group-hover:scale-105"
+            className="w-full h-auto object-contain transition-transform duration-1000"
             sizes="100vw"
           />
           <div className="absolute inset-0 bg-black/10 opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
@@ -54,7 +54,7 @@ export const MyStyle: React.FC = () => {
                 src="/Home/Il%20mio%20stile/Leone.jpg"
                 alt="Reportage style photography"
                 fill
-                className="object-cover transition-all duration-1000 md:group-hover:scale-105"
+                className="object-cover transition-all duration-1000"
                 sizes="(max-width: 768px) 100vw, 50vw"
               />
               <div className="absolute inset-0 bg-black/10 opacity-0 md:group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">

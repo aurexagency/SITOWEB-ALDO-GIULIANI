@@ -29,15 +29,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="it" className="h-full">
-      <head>
+    <html lang="it" className="h-full" suppressHydrationWarning>
+      <body className={`${inter.variable} ${playfair.variable} h-full min-h-full flex flex-col font-sans antialiased bg-[var(--background)] text-[var(--foreground)]`} suppressHydrationWarning>
         {/* iubenda Privacy Controls and Cookie Solution - caricato prima di qualsiasi interazione */}
         <Script
           src="https://embeds.iubenda.com/widgets/d87794d5-2888-498a-abd6-cc2d5e8578cb.js"
-          strategy="beforeInteractive"
+          strategy="afterInteractive"
+          suppressHydrationWarning
         />
-      </head>
-      <body className={`${inter.variable} ${playfair.variable} h-full min-h-full flex flex-col font-sans antialiased bg-[var(--background)] text-[var(--foreground)]`}>
         <Navbar />
         <div className="flex-1 flex flex-col">
           {children}

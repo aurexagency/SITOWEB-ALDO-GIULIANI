@@ -48,10 +48,10 @@ export const MyStyle: React.FC = () => {
           <div className="flex flex-col-reverse md:flex-row items-center justify-between gap-12 md:gap-16">
             <div 
               className="md:w-1/2 relative h-[60vh] md:h-[80vh] w-full cursor-pointer group overflow-hidden"
-              onClick={() => setSelectedImage("/Home/Leone.jpg")}
+              onClick={() => setSelectedImage("/Home/Il%20mio%20stile/Leone.jpg")}
             >
               <Image
-                src="/Home/Leone.jpg"
+                src="/Home/Il%20mio%20stile/Leone.jpg"
                 alt="Reportage style photography"
                 fill
                 className="object-cover transition-all duration-1000 md:group-hover:scale-105"

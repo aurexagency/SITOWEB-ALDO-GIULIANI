@@ -48,15 +48,41 @@ const DEFAULT_HERO_IMAGES = [
   '/Home/hero/Sport06.avif',
 ];
 
-// Mobile: immagini verticali native dalla cartella hero-mobile
+// Mobile: immagini verticali native dalla cartella hero-mobile (tutte e 27 bilanciate)
 const DEFAULT_HERO_MOBILE_IMAGES = [
-  '/Home/hero-mobile/Wedding02.avif',
+  // Ciclo 1
+  '/Home/hero-mobile/Wedding01.avif',
   '/Home/hero-mobile/Portrait01.avif',
-  '/Home/hero-mobile/Sport03.avif',
-  '/Home/hero-mobile/Wildlife02.avif',
+  '/Home/hero-mobile/Sport01.avif',
+  '/Home/hero-mobile/Wildlife01.avif',
   '/Home/hero-mobile/Pet01.avif',
-  '/Home/hero-mobile/Portrait04.avif',
+  // Ciclo 2
+  '/Home/hero-mobile/Wedding02.avif',
+  '/Home/hero-mobile/Portrait02.avif',
+  '/Home/hero-mobile/Sport02.avif',
+  '/Home/hero-mobile/Wildlife02.avif',
+  '/Home/hero-mobile/Pet02.avif',
+  // Ciclo 3
+  '/Home/hero-mobile/Wedding03.avif',
+  '/Home/hero-mobile/Portrait03.avif',
+  '/Home/hero-mobile/Sport03.avif',
+  '/Home/hero-mobile/Wildlife03.avif',
+  '/Home/hero-mobile/Pet03.avif',
+  // Ciclo 4
   '/Home/hero-mobile/Wedding04.avif',
+  '/Home/hero-mobile/Portrait04.avif',
+  '/Home/hero-mobile/Sport04.avif',
+  '/Home/hero-mobile/Wildlife04.avif',
+  '/Home/hero-mobile/Pet04.avif',
+  // Ciclo 5
+  '/Home/hero-mobile/Wedding05.avif',
+  '/Home/hero-mobile/Portrait05.avif',
+  '/Home/hero-mobile/Sport05.avif',
+  '/Home/hero-mobile/Wildlife05.avif',
+  '/Home/hero-mobile/Pet05.avif',
+  // Ciclo 6 (rimanenti)
+  '/Home/hero-mobile/Portrait06.avif',
+  '/Home/hero-mobile/Sport06.avif',
 ];
 
 /**

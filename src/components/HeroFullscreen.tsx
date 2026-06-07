@@ -100,20 +100,19 @@ export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({
     return () => clearTimeout(timer);
   }, []);
 
-  // Reset indice quando cambia il set di immagini (es. rotazione schermo)
+  // Quando cambia il device (es. rotazione schermo), resetta indice e riavvia lo slideshow
   useEffect(() => {
     setCurrentIndex(0);
-  }, [isMobile]);
+    const pool = isMobile ? mobileImages : images;
+    if (!pool || pool.length <= 1) return;
 
-  useEffect(() => {
-    if (!activeImages || activeImages.length <= 1) return;
-    
     // Gestisce la rotazione automatica delle immagini (slideshow)
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % activeImages.length);
+      setCurrentIndex((prev) => (prev + 1) % pool.length);
     }, 6000); // Cambia immagine ogni 6 secondi
     return () => clearInterval(interval);
-  }, [activeImages]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMobile]);
 
   const handleScrollDown = () => {
     window.scrollTo({

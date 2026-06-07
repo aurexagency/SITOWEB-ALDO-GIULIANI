@@ -50,12 +50,13 @@ const DEFAULT_HERO_IMAGES = [
 
 // Mobile: immagini verticali native dalla cartella hero- mobile
 const DEFAULT_HERO_MOBILE_IMAGES = [
-  '/Home/hero- mobile/1.jpeg',
-  '/Home/hero- mobile/2.jpeg',
-  '/Home/hero- mobile/BeachVolley03..jpg',
-  '/Home/hero- mobile/IMG_4935.jpg',
-  '/Home/hero- mobile/Linci-.jpg',
-  '/Home/hero- mobile/_DSC4450.jpg',
+  '/Home/hero- mobile/Wedding02.avif',
+  '/Home/hero- mobile/Portrait01.avif',
+  '/Home/hero- mobile/Sport03.avif',
+  '/Home/hero- mobile/Wildlife02.avif',
+  '/Home/hero- mobile/Pet01.avif',
+  '/Home/hero- mobile/Portrait04.avif',
+  '/Home/hero- mobile/Wedding04.avif',
 ];
 
 /**

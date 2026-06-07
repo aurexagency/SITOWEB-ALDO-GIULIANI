@@ -48,15 +48,15 @@ const DEFAULT_HERO_IMAGES = [
   '/Home/hero/Sport06.avif',
 ];
 
-// Mobile: immagini verticali native dalla cartella hero- mobile
+// Mobile: immagini verticali native dalla cartella hero-mobile
 const DEFAULT_HERO_MOBILE_IMAGES = [
-  '/Home/hero- mobile/Wedding02.avif',
-  '/Home/hero- mobile/Portrait01.avif',
-  '/Home/hero- mobile/Sport03.avif',
-  '/Home/hero- mobile/Wildlife02.avif',
-  '/Home/hero- mobile/Pet01.avif',
-  '/Home/hero- mobile/Portrait04.avif',
-  '/Home/hero- mobile/Wedding04.avif',
+  '/Home/hero-mobile/Wedding02.avif',
+  '/Home/hero-mobile/Portrait01.avif',
+  '/Home/hero-mobile/Sport03.avif',
+  '/Home/hero-mobile/Wildlife02.avif',
+  '/Home/hero-mobile/Pet01.avif',
+  '/Home/hero-mobile/Portrait04.avif',
+  '/Home/hero-mobile/Wedding04.avif',
 ];
 
 /**

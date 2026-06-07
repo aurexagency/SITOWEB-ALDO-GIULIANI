@@ -180,11 +180,11 @@ export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({
       <div className="absolute inset-0 z-10 bg-[radial-gradient(circle_at_center,_transparent_30%,_rgba(0,0,0,0.45))]" />
 
       {/* 4. CONTENUTO CENTRALE */}
-      <div className="relative z-20 text-center px-6 w-full flex flex-col items-center select-none">
+      <div className="relative z-20 text-center px-6 w-full flex flex-col items-center gap-4 select-none">
         
         {/* Titolo Principale (Font Bodoni Moda — Alta Moda / Editoriale) */}
         <h1
-          className={`${bodoni.className} text-5xl md:text-7xl lg:text-[8vw] tracking-tight text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] transition-all duration-[1200ms] ease-out mb-6 delay-500 ${
+          className={`${bodoni.className} text-5xl md:text-7xl lg:text-[8vw] tracking-tight text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] transition-all duration-[1200ms] ease-out delay-500 ${
             animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >
@@ -193,7 +193,7 @@ export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({
 
         {/* Sottotitolo (Sans-serif minimale spaziatissimo) */}
         <p
-          className={`text-xs md:text-sm tracking-[0.6em] text-white/80 uppercase font-light mb-8 transition-all duration-[1200ms] ease-out delay-700 ${
+          className={`text-xs md:text-sm tracking-[0.6em] text-white/80 uppercase font-light transition-all duration-[1200ms] ease-out delay-700 ${
             animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
           style={{
@@ -211,7 +211,7 @@ export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({
 
         {/* Frase poetica d'impatto (Focalizzante su USP) */}
         <p
-          className={`text-sm md:text-lg font-serif text-white/90 italic tracking-wide max-w-xl mb-12 transition-all duration-[1200ms] ease-out delay-900 ${
+          className={`text-sm md:text-lg font-serif text-white/90 italic tracking-wide max-w-xl leading-snug transition-all duration-[1200ms] ease-out delay-900 ${
             animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
           }`}
           style={{

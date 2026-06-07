@@ -4,9 +4,9 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from './Button';
-import { Allura } from 'next/font/google';
+import { Bodoni_Moda } from 'next/font/google';
 
-const allura = Allura({ weight: '400', subsets: ['latin'], display: 'swap' });
+const bodoni = Bodoni_Moda({ subsets: ['latin'], display: 'swap', style: ['normal', 'italic'] });
 
 interface HeroFullscreenProps {
   images?: string[];
@@ -156,9 +156,9 @@ export const HeroFullscreen: React.FC<HeroFullscreenProps> = ({
       {/* 4. CONTENUTO CENTRALE */}
       <div className="relative z-20 text-center px-6 w-full flex flex-col items-center select-none">
         
-        {/* Titolo Principale (Font Allura) */}
+        {/* Titolo Principale (Font Bodoni Moda — Alta Moda / Editoriale) */}
         <h1
-          className={`${allura.className} text-[15vw] md:text-[8vw] leading-none text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] transition-all duration-[1200ms] ease-out mb-6 delay-500 ${
+          className={`${bodoni.className} text-5xl md:text-7xl lg:text-[8vw] tracking-tight text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)] transition-all duration-[1200ms] ease-out mb-6 delay-500 ${
             animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
           }`}
         >

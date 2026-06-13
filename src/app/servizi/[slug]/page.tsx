@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Marquee } from '@/components/Marquee';
 import { Button } from '@/components/Button';
+import { Metadata } from 'next';
+import { servicesSeo, isValidServiceCategory } from '@/config/servicesSeo';
 
 // Mock data for services
 const servicesData: Record<string, { title: string, subtitle: string, description: string, images: string[], mainImage: string, tagline?: string }> = {
@@ -236,15 +238,88 @@ const servicesData: Record<string, { title: string, subtitle: string, descriptio
   }
 };
 
-export default async function ServicePage(props: { params: Promise<{ slug: string }> }) {
-  const params = await props.params;
-  const service = servicesData[params.slug];
+type Props = {
+  params: Promise<{ slug: string }>;
+};
 
-  if (!service) {
+// SSG: Genera staticamente le rotte in fase di build
+export async function generateStaticParams() {
+  return Object.keys(servicesSeo).map((slug) => ({
+    slug,
+  }));
+}
+
+// Meta tag dinamici basati sulla categoria per la SEO locale
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const resolvedParams = await params;
+  const { slug } = resolvedParams;
+
+  if (!isValidServiceCategory(slug)) {
+    return {
+      title: "Servizio Non Trovato | Aldo Giuliani",
+    };
+  }
+
+  const seoData = servicesSeo[slug];
+
+  return {
+    title: seoData.title,
+    description: seoData.description,
+    openGraph: {
+      title: seoData.title,
+      description: seoData.description,
+      type: "website",
+      url: `https://aldogiuliani.it/servizi/${slug}`,
+    },
+    alternates: {
+      canonical: `https://aldogiuliani.it/servizi/${slug}`,
+    },
+  };
+}
+
+export default async function ServicePage({ params }: Props) {
+  const resolvedParams = await params;
+  const { slug } = resolvedParams;
+  const service = servicesData[slug];
+
+  if (!service || !isValidServiceCategory(slug)) {
     notFound();
   }
 
+  const seoData = servicesSeo[slug];
+
+  // Schema.org BreadcrumbList locale per questa specifica pagina
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://aldogiuliani.it"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Servizi",
+        "item": "https://aldogiuliani.it/servizi"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": seoData.h1,
+        "item": `https://aldogiuliani.it/servizi/${slug}`
+      }
+    ]
+  };
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
     <main className="min-h-screen bg-[var(--background)]">
       {/* Service Hero */}
       <section data-nav-transparent="true" className="relative h-[70vh] md:h-auto md:aspect-video w-full flex items-center justify-center overflow-hidden">
@@ -292,8 +367,8 @@ export default async function ServicePage(props: { params: Promise<{ slug: strin
       <section className="py-32 bg-[var(--foreground)] text-center px-6">
         <h2 className="font-serif text-4xl text-white mb-8">Vuoi raccontare la tua storia?</h2>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          {params.slug !== 'wildlife' && (
-            <Link href={`/preventivo?servizio=${params.slug}`}>
+          {slug !== 'wildlife' && (
+            <Link href={`/preventivo?servizio=${slug}`}>
               <Button
                 variant="outline"
                 className="border-[var(--champagne)] text-[var(--champagne)] bg-black/20 hover:bg-[var(--champagne)] hover:text-black hover:scale-105 duration-500 shadow-lg shadow-[rgba(197,160,89,0.1)] px-10 py-4"
@@ -302,7 +377,7 @@ export default async function ServicePage(props: { params: Promise<{ slug: strin
               </Button>
             </Link>
           )}
-          {(params.slug === 'sport' || params.slug === 'wildlife') && (
+          {(slug === 'sport' || slug === 'wildlife') && (
             <Button
               variant="outline"
               className="border-[var(--champagne)] text-[var(--champagne)] bg-black/20 hover:bg-[var(--champagne)] hover:text-black hover:scale-105 duration-500 shadow-lg shadow-[rgba(197,160,89,0.1)] px-10 py-4"
@@ -313,5 +388,6 @@ export default async function ServicePage(props: { params: Promise<{ slug: strin
         </div>
       </section>
     </main>
+    </>
   );
 }

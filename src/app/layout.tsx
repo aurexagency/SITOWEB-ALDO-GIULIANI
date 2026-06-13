@@ -22,6 +22,7 @@ export const metadata: Metadata = {
 };
 
 import { Navbar } from "@/components/Navbar";
+import JsonLdSeo from "@/components/JsonLdSeo";
 
 export default function RootLayout({
   children,
@@ -31,6 +32,14 @@ export default function RootLayout({
   return (
     <html lang="it" className="h-full" suppressHydrationWarning>
       <body className={`${inter.variable} ${playfair.variable} h-full min-h-full flex flex-col font-sans antialiased bg-[var(--background)] text-[var(--foreground)]`} suppressHydrationWarning>
+        {/* ── JSON-LD Structured Data (Schema.org) ─────────────────────────
+             Server Component puro: nessun JavaScript nel bundle client.
+             Posizionato come primo figlio di <body> per essere parsato
+             immediatamente dai crawler (Googlebot, Bingbot, ecc.).
+             Non interagisce con il ciclo di hydration di React perché
+             <script> è un nodo DOM statico, non un componente interattivo.
+        ─────────────────────────────────────────────────────────────────── */}
+        <JsonLdSeo />
         {/* iubenda Privacy Controls and Cookie Solution - caricato prima di qualsiasi interazione */}
         <Script
           src="https://embeds.iubenda.com/widgets/d87794d5-2888-498a-abd6-cc2d5e8578cb.js"
